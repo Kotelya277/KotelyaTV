@@ -29,7 +29,7 @@ function HomeClient() {
   const [hotTvShows, setHotTvShows] = useState<DoubanItem[]>([]);
   const [hotVarietyShows, setHotVarietyShows] = useState<DoubanItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const { announcement } = useSite();
+  const { announcement, siteName } = useSite();
 
   const [showAnnouncement, setShowAnnouncement] = useState(false);
 
@@ -157,6 +157,13 @@ function HomeClient() {
   return (
     <PageLayout>
       <div className='px-2 sm:px-10 py-4 sm:py-8 overflow-visible'>
+        {/* 顶部品牌（液态玻璃、超大圆角） */}
+        <div className='mb-4 flex justify-center'>
+          <div className='px-5 py-2 rounded-[9999px] bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border border-white/10 dark:border-white/10 shadow-sm text-sm font-semibold text-gray-900 dark:text-gray-100'>
+            {siteName}
+          </div>
+        </div>
+
         {/* 顶部 Tab 切换 */}
         <div className='mb-8 flex justify-center'>
           <CapsuleSwitch
