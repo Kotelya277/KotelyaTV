@@ -18,6 +18,7 @@ import { yellowWords } from '@/lib/yellow';
 import PageLayout from '@/components/PageLayout';
 import { useSite } from '@/components/SiteProvider';
 import VideoCard from '@/components/VideoCard';
+import BrandPill from '@/components/BrandPill';
 
 function SearchPageClient() {
   const { siteName } = useSite();
@@ -269,9 +270,7 @@ function SearchPageClient() {
       <div className='px-4 sm:px-10 py-4 sm:py-8 overflow-visible mb-10'>
         {/* 顶部品牌（液态玻璃、超大圆角，桌面更柔阴影与更浅边框） */}
         <div className='mb-4 flex justify-center'>
-          <div className='px-5 py-2 rounded-[9999px] bg-white/30 dark:bg-zinc-900/30 backdrop-blur-xl border border-white/10 dark:border-white/10 shadow-sm md:shadow-[0_10px_30px_rgba(0,0,0,0.06)] md:border-white/20 md:dark:border-white/15 text-sm font-semibold text-gray-900 dark:text-gray-100'>
-            {siteName}
-          </div>
+          <BrandPill />
         </div>
         {/* 搜索框 */}
         <div className='mb-8'>

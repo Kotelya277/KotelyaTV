@@ -26,6 +26,7 @@ import { getVideoResolutionFromM3u8, processImageUrl } from '@/lib/utils';
 
 import EpisodeSelector from '@/components/EpisodeSelector';
 import PageLayout from '@/components/PageLayout';
+import BrandPill from '@/components/BrandPill';
 
 // 扩展 HTMLVideoElement 类型以支持 hls 属性
 declare global {
@@ -1838,6 +1839,10 @@ function PlayPageClient() {
   return (
     <PageLayout activePath='/play'>
       <div className='flex flex-col gap-3 py-4 px-5 lg:px-[3rem] 2xl:px-20'>
+        {/* KotelyaTV Glass Pill */}
+        <div className='flex justify-center mb-2'>
+          <BrandPill />
+        </div>
         {/* 第一行：影片标题 */}
         <div className='py-1'>
           <h1 className='text-xl font-semibold text-gray-900 dark:text-gray-100'>

@@ -22,6 +22,7 @@ import PageLayout from '@/components/PageLayout';
 import ScrollableRow from '@/components/ScrollableRow';
 import { useSite } from '@/components/SiteProvider';
 import VideoCard from '@/components/VideoCard';
+import BrandPill from '@/components/BrandPill';
 
 function HomeClient() {
   const [activeTab, setActiveTab] = useState<'home' | 'continue' | 'favorites'>('home');
@@ -159,9 +160,7 @@ function HomeClient() {
       <div className='px-2 sm:px-10 py-4 sm:py-8 overflow-visible'>
         {/* 顶部品牌（液态玻璃、超大圆角） */}
         <div className='mb-4 flex justify-center'>
-          <div className='px-5 py-2 rounded-[9999px] bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border border-white/10 dark:border-white/10 shadow-sm text-sm font-semibold text-gray-900 dark:text-gray-100'>
-            {siteName}
-          </div>
+          <BrandPill />
         </div>
 
         {/* 顶部 Tab 切换 */}
