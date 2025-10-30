@@ -75,15 +75,15 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
 
   return (
     <nav
-      className='md:hidden fixed left-0 right-0 z-[600] bg-white/90 backdrop-blur-xl border-t border-gray-200/50 overflow-hidden dark:bg-gray-900/80 dark:border-gray-700/50'
+      className='fixed left-0 right-0 bottom-0 z-[600] overflow-hidden rounded-t-2xl border-t shadow-[0_-8px_24px_rgba(0,0,0,0.08)] bg-white/60 dark:bg-zinc-900/50 backdrop-blur-xl border-white/20 dark:border-white/10'
       style={{
-        /* 紧贴视口底部，同时在内部留出安全区高度 */
-        bottom: 0,
         paddingBottom: 'env(safe-area-inset-bottom)',
         minHeight: 'calc(3.5rem + env(safe-area-inset-bottom))',
+        backdropFilter: 'blur(18px)',
+        WebkitBackdropFilter: 'blur(18px)',
       }}
     >
-      <ul className='flex items-center overflow-x-auto scrollbar-hide'>
+      <ul className='flex items-center overflow-x-auto scrollbar-hide px-2'>
         {navItems.map((item) => {
           const active = isActive(item.href);
           return (

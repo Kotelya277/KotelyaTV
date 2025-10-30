@@ -1,7 +1,6 @@
 import { BackButton } from './BackButton';
 import MobileBottomNav from './MobileBottomNav';
 import MobileHeader from './MobileHeader';
-import Sidebar from './Sidebar';
 import { ThemeToggle } from './ThemeToggle';
 import { UserMenu } from './UserMenu';
 
@@ -17,12 +16,7 @@ const PageLayout = ({ children, activePath = '/' }: PageLayoutProps) => {
       <MobileHeader showBackButton={['/play'].includes(activePath)} />
 
       {/* 主要布局容器 */}
-      <div className='flex md:grid md:grid-cols-[auto_1fr] w-full min-h-screen md:min-h-auto'>
-        {/* 侧边栏 - 桌面端显示，移动端隐藏 */}
-        <div className='hidden md:block'>
-          <Sidebar activePath={activePath} />
-        </div>
-
+      <div className='flex w-full min-h-screen md:min-h-auto'>
         {/* 主内容区域 */}
         <div className='relative min-w-0 flex-1 transition-all duration-300'>
           {/* 桌面端左上角返回按钮 */}
@@ -50,10 +44,8 @@ const PageLayout = ({ children, activePath = '/' }: PageLayoutProps) => {
         </div>
       </div>
 
-      {/* 移动端底部导航 */}
-      <div className='md:hidden'>
-        <MobileBottomNav activePath={activePath} />
-      </div>
+      {/* 底部导航（全端显示） */}
+      <MobileBottomNav activePath={activePath} />
     </div>
   );
 };
