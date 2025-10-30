@@ -75,7 +75,7 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
 
   return (
     <nav
-      className='fixed left-0 right-0 z-[600] mx-auto max-w-[680px] sm:max-w-[820px] overflow-hidden rounded-t-3xl border-t shadow-[0_-8px_24px_rgba(0,0,0,0.08)] bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border-white/10 dark:border-white/10'
+      className='fixed left-0 right-0 z-[600] mx-auto max-w-[680px] sm:max-w-[820px] overflow-hidden rounded-t-[9999px] border-t shadow-[0_-8px_24px_rgba(0,0,0,0.08)] bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border-white/10 dark:border-white/10'
       style={{
         bottom: '12px',
         paddingBottom: 'env(safe-area-inset-bottom)',
