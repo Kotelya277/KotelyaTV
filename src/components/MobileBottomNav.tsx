@@ -75,7 +75,7 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
 
   return (
     <nav
-      className='fixed left-0 right-0 z-[600] overflow-hidden rounded-t-2xl border-t shadow-[0_-8px_24px_rgba(0,0,0,0.08)] bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border-white/10 dark:border-white/10'
+      className='fixed left-0 right-0 z-[600] mx-auto max-w-[680px] sm:max-w-[820px] overflow-hidden rounded-t-2xl border-t shadow-[0_-8px_24px_rgba(0,0,0,0.08)] bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border-white/10 dark:border-white/10'
       style={{
         bottom: '12px',
         paddingBottom: 'env(safe-area-inset-bottom)',
@@ -84,14 +84,13 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
         WebkitBackdropFilter: 'blur(18px)',
       }}
     >
-      <ul className='flex items-center overflow-x-auto scrollbar-hide px-3'>
+      <ul className='flex items-center justify-around w-full px-3'>
         {navItems.map((item) => {
           const active = isActive(item.href);
           return (
             <li
               key={item.href}
-              className='flex-shrink-0'
-              style={{ width: '20vw', minWidth: '20vw' }}
+              className='flex-1 min-w-[64px] sm:min-w-[88px]'
             >
               <Link
                 href={item.href}
