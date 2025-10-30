@@ -159,6 +159,25 @@ function SearchPageClient() {
     }
   }, [searchParams]);
 
+  // 输入防抖自动搜索（避免频繁提交）
+  useEffect(() => {
+    const trimmed = searchQuery.trim();
+    // 仅当有内容且长度>=2时进行自动搜索
+    if (trimmed.length >= 2) {
+      const timer = setTimeout(() => {
+        // 更新地址但不压栈，避免输入时产生大量历史记录
+        router.replace(`/search?q=${encodeURIComponent(trimmed)}`);
+        setIsLoading(true);
+        setShowResults(true);
+        fetchSearchResults(trimmed);
+        addSearchHistory(trimmed);
+      }, 400);
+      return () => clearTimeout(timer);
+    }
+    // 空内容则回到历史视图
+    setShowResults(false);
+  }, [searchQuery]);
+
   const fetchSearchResults = async (query: string) => {
     try {
       setIsLoading(true);
@@ -257,8 +276,22 @@ function SearchPageClient() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder='搜索电影、电视剧...'
-                className='w-full h-12 rounded-lg bg-gray-50/80 py-3 pl-10 pr-4 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:bg-white border border-gray-200/50 shadow-sm dark:bg-gray-800 dark:text-gray-300 dark:placeholder-gray-500 dark:focus:bg-gray-700 dark:border-gray-700'
+                className='w-full h-12 rounded-lg bg-gray-50/80 py-3 pl-10 pr-10 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:bg-white border border-gray-200/50 shadow-sm dark:bg-gray-800 dark:text-gray-300 dark:placeholder-gray-500 dark:focus:bg-gray-700 dark:border-gray-700'
               />
+              {/* 清空输入按钮 */}
+              {searchQuery && (
+                <button
+                  type='button'
+                  aria-label='清空搜索'
+                  onClick={() => {
+                    setSearchQuery('');
+                    setShowResults(false);
+                  }}
+                  className='absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-gray-200 hover:bg-gray-300 text-gray-600 flex items-center justify-center dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-300'
+                >
+                  <X className='w-4 h-4' />
+                </button>
+              )}
             </div>
           </form>
         </div>
@@ -266,9 +299,19 @@ function SearchPageClient() {
         {/* 搜索结果或搜索历史 */}
         <div className='max-w-[95%] mx-auto mt-12 overflow-visible'>
           {isLoading ? (
-            <div className='flex justify-center items-center h-40'>
-              <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-green-500'></div>
-            </div>
+            <section className='mb-12'>
+              <div className='justify-start grid grid-cols-3 gap-x-2 gap-y-14 sm:gap-y-20 px-0 sm:px-2 sm:grid-cols-[repeat(auto-fill,_minmax(11rem,_1fr))] sm:gap-x-8'>
+                {Array.from({ length: 12 }).map((_, index) => (
+                  <div key={index} className='min-w-[96px] w-24 sm:min-w-[180px] sm:w-44'>
+                    <div className='relative aspect-[2/3] w-full overflow-hidden rounded-lg bg-gray-200 animate-pulse dark:bg-gray-800'>
+                      <div className='absolute inset-0 bg-gray-300 dark:bg-gray-700'></div>
+                    </div>
+                    <div className='mt-2 h-4 bg-gray-200 rounded animate-pulse dark:bg-gray-800'></div>
+                    <div className='mt-1 h-3 bg-gray-200 rounded animate-pulse dark:bg-gray-800'></div>
+                  </div>
+                ))}
+              </div>
+            </section>
           ) : showResults ? (
             <section className='mb-12'>
               {/* 标题 + 聚合开关 */}

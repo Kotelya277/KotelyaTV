@@ -24,7 +24,7 @@ import { useSite } from '@/components/SiteProvider';
 import VideoCard from '@/components/VideoCard';
 
 function HomeClient() {
-  const [activeTab, setActiveTab] = useState<'home' | 'favorites'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'continue' | 'favorites'>('home');
   const [hotMovies, setHotMovies] = useState<DoubanItem[]>([]);
   const [hotTvShows, setHotTvShows] = useState<DoubanItem[]>([]);
   const [hotVarietyShows, setHotVarietyShows] = useState<DoubanItem[]>([]);
@@ -162,10 +162,11 @@ function HomeClient() {
           <CapsuleSwitch
             options={[
               { label: '首页', value: 'home' },
+              { label: '继续观看', value: 'continue' },
               { label: '收藏夹', value: 'favorites' },
             ]}
             active={activeTab}
-            onChange={(value) => setActiveTab(value as 'home' | 'favorites')}
+            onChange={(value) => setActiveTab(value as 'home' | 'continue' | 'favorites')}
           />
         </div>
 
@@ -207,12 +208,12 @@ function HomeClient() {
                 )}
               </div>
             </section>
+          ) : activeTab === 'continue' ? (
+            // 继续观看视图
+            <ContinueWatching />
           ) : (
             // 首页视图
             <>
-              {/* 继续观看 */}
-              <ContinueWatching />
-
               {/* 热门电影 */}
               <section className='mb-8'>
                 <div className='mb-4 flex items-center justify-between'>
