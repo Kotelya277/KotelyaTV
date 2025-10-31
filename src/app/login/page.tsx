@@ -8,9 +8,9 @@ import { Suspense, useEffect, useState } from 'react';
 
 import { checkForUpdates, CURRENT_VERSION, UpdateStatus } from '@/lib/version';
 
+import BrandPill from '@/components/BrandPill';
 import { useSite } from '@/components/SiteProvider';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import BrandPill from '@/components/BrandPill';
 
 // 版本显示组件
 function VersionDisplay() {
@@ -35,7 +35,7 @@ function VersionDisplay() {
   return (
     <button
       onClick={() =>
-        window.open('https://github.com/LunaTechLab/MoonTV', '_blank')
+        window.open('https://github.com/Kotelya277/KotelyaTV/tree/main', '_blank')
       }
       className='absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 transition-colors cursor-pointer'
     >
