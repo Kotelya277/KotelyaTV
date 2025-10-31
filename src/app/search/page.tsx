@@ -16,9 +16,12 @@ import { SearchResult } from '@/lib/types';
 import { yellowWords } from '@/lib/yellow';
 
 import PageLayout from '@/components/PageLayout';
+import { useSite } from '@/components/SiteProvider';
 import VideoCard from '@/components/VideoCard';
+import BrandPill from '@/components/BrandPill';
 
 function SearchPageClient() {
+  const { siteName } = useSite();
   // 搜索历史
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
   // 返回顶部按钮显示状态
@@ -265,6 +268,10 @@ function SearchPageClient() {
   return (
     <PageLayout activePath='/search'>
       <div className='px-4 sm:px-10 py-4 sm:py-8 overflow-visible mb-10'>
+        {/* 顶部品牌（液态玻璃、超大圆角，桌面更柔阴影与更浅边框） */}
+        <div className='mb-4 flex justify-center'>
+          <BrandPill />
+        </div>
         {/* 搜索框 */}
         <div className='mb-8'>
           <form onSubmit={handleSearch} className='max-w-2xl mx-auto'>

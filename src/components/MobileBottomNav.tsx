@@ -75,26 +75,26 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
 
   return (
     <nav
-      className='fixed left-0 right-0 bottom-0 z-[600] overflow-hidden rounded-t-2xl border-t shadow-[0_-8px_24px_rgba(0,0,0,0.08)] bg-white/60 dark:bg-zinc-900/50 backdrop-blur-xl border-white/20 dark:border-white/10'
+      className='fixed left-0 right-0 z-[600] mx-auto max-w-[680px] sm:max-w-[820px] overflow-hidden rounded-[9999px] border bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border-white/5 dark:border-white/5 shadow-[0_12px_36px_rgba(0,0,0,0.05)]'
       style={{
+        bottom: '12px',
         paddingBottom: 'env(safe-area-inset-bottom)',
-        minHeight: 'calc(3.5rem + env(safe-area-inset-bottom))',
+        minHeight: 'calc(3rem + env(safe-area-inset-bottom))',
         backdropFilter: 'blur(18px)',
         WebkitBackdropFilter: 'blur(18px)',
       }}
     >
-      <ul className='flex items-center overflow-x-auto scrollbar-hide px-2'>
+      <ul className='flex items-center justify-around w-full px-3'>
         {navItems.map((item) => {
           const active = isActive(item.href);
           return (
             <li
               key={item.href}
-              className='flex-shrink-0'
-              style={{ width: '20vw', minWidth: '20vw' }}
+              className='flex-1 min-w-[64px] sm:min-w-[88px]'
             >
               <Link
                 href={item.href}
-                className='flex flex-col items-center justify-center w-full h-14 gap-1 text-xs'
+                className='flex flex-col items-center justify-center w-full h-12 gap-1 text-xs'
               >
                 <item.icon
                   className={`h-6 w-6 ${

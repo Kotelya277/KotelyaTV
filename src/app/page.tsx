@@ -13,7 +13,7 @@ import {
   getAllPlayRecords,
   subscribeToDataUpdates,
 } from '@/lib/db.client';
-import { getDoubanCategories } from '@/lib/douban.client';
+import { getDoubanCategories, getDoubanList } from '@/lib/douban.client';
 import { DoubanItem } from '@/lib/types';
 
 import CapsuleSwitch from '@/components/CapsuleSwitch';
@@ -22,14 +22,16 @@ import PageLayout from '@/components/PageLayout';
 import ScrollableRow from '@/components/ScrollableRow';
 import { useSite } from '@/components/SiteProvider';
 import VideoCard from '@/components/VideoCard';
+import BrandPill from '@/components/BrandPill';
 
 function HomeClient() {
   const [activeTab, setActiveTab] = useState<'home' | 'continue' | 'favorites'>('home');
   const [hotMovies, setHotMovies] = useState<DoubanItem[]>([]);
   const [hotTvShows, setHotTvShows] = useState<DoubanItem[]>([]);
   const [hotVarietyShows, setHotVarietyShows] = useState<DoubanItem[]>([]);
+  const [hotAnime, setHotAnime] = useState<DoubanItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const { announcement } = useSite();
+  const { announcement, siteName } = useSite();
 
   const [showAnnouncement, setShowAnnouncement] = useState(false);
 
@@ -64,7 +66,7 @@ function HomeClient() {
       try {
         setLoading(true);
 
-        // 并行获取热门电影、热门剧集和热门综艺
+        // 并行获取热门电影、热门剧集、热门综艺、热门动漫
         const [moviesData, tvShowsData, varietyShowsData] = await Promise.all([
           getDoubanCategories({
             kind: 'movie',
@@ -85,6 +87,36 @@ function HomeClient() {
 
         if (varietyShowsData.code === 200) {
           setHotVarietyShows(varietyShowsData.list);
+        }
+
+        // 动漫采用列表接口，并添加标签回退：动画 → 日本动画 → 国产动画
+        let animeData = await getDoubanList({
+          type: 'tv',
+          tag: '动画',
+          pageLimit: 20,
+          pageStart: 0,
+        });
+
+        if (animeData.code === 200 && animeData.list.length === 0) {
+          animeData = await getDoubanList({
+            type: 'tv',
+            tag: '日本动画',
+            pageLimit: 20,
+            pageStart: 0,
+          });
+        }
+
+        if (animeData.code === 200 && animeData.list.length === 0) {
+          animeData = await getDoubanList({
+            type: 'tv',
+            tag: '国产动画',
+            pageLimit: 20,
+            pageStart: 0,
+          });
+        }
+
+        if (animeData.code === 200) {
+          setHotAnime(animeData.list);
         }
       } catch (error) {
         console.error('获取豆瓣数据失败:', error);
@@ -157,6 +189,11 @@ function HomeClient() {
   return (
     <PageLayout>
       <div className='px-2 sm:px-10 py-4 sm:py-8 overflow-visible'>
+        {/* 顶部品牌（液态玻璃、超大圆角） */}
+        <div className='mb-4 flex justify-center'>
+          <BrandPill />
+        </div>
+
         {/* 顶部 Tab 切换 */}
         <div className='mb-8 flex justify-center'>
           <CapsuleSwitch
@@ -350,6 +387,54 @@ function HomeClient() {
                             douban_id={Number(show.id)}
                             rate={show.rate}
                             year={show.year}
+                          />
+                        </div>
+                      ))}
+                </ScrollableRow>
+              </section>
+
+              {/* 热门动漫 */}
+              <section className='mb-8'>
+                <div className='mb-4 flex items-center justify-between'>
+                  <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200'>
+                    热门动漫
+                  </h2>
+                  <Link
+                    href='/douban?type=tv&label=动画'
+                    className='flex items-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                  >
+                    查看更多
+                    <ChevronRight className='w-4 h-4 ml-1' />
+                  </Link>
+                </div>
+                <ScrollableRow>
+                  {loading
+                    ? // 加载状态显示灰色占位数据
+                      Array.from({ length: 8 }).map((_, index) => (
+                        <div
+                          key={index}
+                          className='min-w-[96px] w-24 sm:min-w-[180px] sm:w-44'
+                        >
+                          <div className='relative aspect-[2/3] w-full overflow-hidden rounded-lg bg-gray-200 animate-pulse dark:bg-gray-800'>
+                            <div className='absolute inset-0 bg-gray-300 dark:bg-gray-700'></div>
+                          </div>
+                          <div className='mt-2 h-4 bg-gray-200 rounded animate-pulse dark:bg-gray-800'></div>
+                        </div>
+                      ))
+                    : // 显示真实数据
+                      hotAnime.map((anime, index) => (
+                        <div
+                          key={index}
+                          className='min-w-[96px] w-24 sm:min-w-[180px] sm:w-44'
+                        >
+                          <VideoCard
+                            from='douban'
+                            title={anime.title}
+                            poster={anime.poster}
+                            douban_id={Number(anime.id)}
+                            rate={anime.rate}
+                            year={anime.year}
+                            type='tv'
                           />
                         </div>
                       ))}
