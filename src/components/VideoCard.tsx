@@ -65,6 +65,12 @@ export default function VideoCard({
   const [detailLoading, setDetailLoading] = useState(false);
   const modalRef = useRef<HTMLDivElement | null>(null);
 
+  // 辅助函数：在相邻容器中查找可聚焦的卡片按钮并聚焦（避免 Element 类型缺少 focus）
+  const focusRoleButton = (container: Element | null | undefined) => {
+    const el = container?.querySelector('[role="button"]') as HTMLElement | null;
+    el?.focus();
+  };
+
   const isAggregate = from === 'search' && !!items?.length;
 
   const aggregateData = useMemo(() => {
@@ -316,10 +322,10 @@ export default function VideoCard({
         }
         // 简易左右导航：在卡片容器同级间移动焦点
         if (e.key === 'ArrowRight') {
-          (e.currentTarget.parentElement?.nextElementSibling as HTMLElement | null)?.querySelector('[role="button"]')?.focus();
+          focusRoleButton(e.currentTarget.parentElement?.nextElementSibling);
         }
         if (e.key === 'ArrowLeft') {
-          (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.querySelector('[role="button"]')?.focus();
+          focusRoleButton(e.currentTarget.parentElement?.previousElementSibling);
         }
       }}
     >
