@@ -855,12 +855,77 @@ const VideoSourceConfig = ({
         <h4 className='text-sm font-medium text-gray-700 dark:text-gray-300'>
           视频源列表
         </h4>
-        <button
-          onClick={() => setShowAddForm(!showAddForm)}
-          className='px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg transition-colors'
-        >
-          {showAddForm ? '取消' : '添加视频源'}
-        </button>
+        <div className='flex items-center gap-2'>
+          <button
+            onClick={() => setShowAddForm(!showAddForm)}
+            className='px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg transition-colors'
+          >
+            {showAddForm ? '取消' : '添加视频源'}
+          </button>
+          {/* 导出配置 */}
+          <button
+            onClick={async () => {
+              try {
+                // 优先通过接口获取最新配置
+                const resp = await fetch('/api/admin/source', { method: 'GET' });
+                if (resp.ok) {
+                  const text = await resp.text();
+                  const blob = new Blob([text], { type: 'application/json' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = 'sources.json';
+                  document.body.appendChild(a);
+                  a.click();
+                  a.remove();
+                  URL.revokeObjectURL(url);
+                  showSuccess('已导出视频源配置');
+                } else {
+                  throw new Error('导出失败');
+                }
+              } catch (err) {
+                showError(err instanceof Error ? err.message : '导出失败');
+              }
+            }}
+            className='px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors'
+          >
+            导出配置
+          </button>
+
+          {/* 导入配置 */}
+          <label className='px-3 py-1 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700/40 dark:hover:bg-gray-700/60 text-gray-800 dark:text-gray-200 text-sm rounded-lg transition-colors cursor-pointer'>
+            导入配置
+            <input
+              type='file'
+              accept='application/json'
+              className='hidden'
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                try {
+                  const text = await file.text();
+                  const data = JSON.parse(text);
+                  if (!Array.isArray(data)) throw new Error('文件格式错误，应为数组');
+                  const resp = await fetch('/api/admin/source', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'import', sources: data }),
+                  });
+                  if (!resp.ok) {
+                    const info = await resp.json().catch(() => ({}));
+                    throw new Error(info.error || '导入失败');
+                  }
+                  await refreshConfig();
+                  showSuccess('导入配置成功');
+                  // 清空 input 以便重复导入
+                  e.target.value = '';
+                } catch (err) {
+                  showError(err instanceof Error ? err.message : '导入失败');
+                }
+              }}
+            />
+          </label>
+        </div>
       </div>
 
       {showAddForm && (
