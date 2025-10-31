@@ -17,6 +17,7 @@ import { SearchResult } from '@/lib/types';
 import { processImageUrl } from '@/lib/utils';
 
 import { ImagePlaceholder } from '@/components/ImagePlaceholder';
+import { fetchVideoDetail } from '@/lib/fetchVideoDetail';
 
 interface VideoCardProps {
   id?: string;
@@ -59,6 +60,9 @@ export default function VideoCard({
   const [favorited, setFavorited] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [detailDesc, setDetailDesc] = useState<string>('');
+  const [detailLoading, setDetailLoading] = useState(false);
 
   const isAggregate = from === 'search' && !!items?.length;
 
@@ -207,6 +211,18 @@ export default function VideoCard({
   const handleClick = useCallback(() => {
     // 不再直接跳转，改为打开预览卡片
     setPreviewOpen(true);
+    // 下一帧开启可见动画，避免闪烁
+    requestAnimationFrame(() => setPreviewVisible(true));
+    // 在打开时加载详情简介
+    if (actualSource && actualId) {
+      setDetailLoading(true);
+      fetchVideoDetail({ source: actualSource, id: actualId, fallbackTitle: actualTitle })
+        .then((res) => {
+          setDetailDesc(res.desc || '');
+        })
+        .catch(() => {})
+        .finally(() => setDetailLoading(false));
+    }
   }, []);
 
   const config = useMemo(() => {
@@ -384,10 +400,13 @@ export default function VideoCard({
       {previewOpen && (
         <div
           className='fixed inset-0 z-[900] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4'
-          onClick={() => setPreviewOpen(false)}
+          onClick={() => {
+            setPreviewVisible(false);
+            setTimeout(() => setPreviewOpen(false), 200);
+          }}
         >
           <div
-            className='relative w-full max-w-3xl bg-white/80 dark:bg-zinc-900/80 rounded-2xl shadow-2xl border border-white/10 dark:border-white/10 overflow-hidden'
+            className={`relative w-full md:max-w-3xl bg-white/80 dark:bg-zinc-900/80 md:rounded-2xl rounded-t-2xl shadow-2xl border border-white/10 dark:border-white/10 overflow-hidden transition-all duration-200 ease-out ${previewVisible ? 'opacity-100 md:scale-100 translate-y-0' : 'opacity-0 md:scale-95 translate-y-4'} md:bottom-auto md:left-auto md:right-auto md:top-auto bottom-0 md:relative`}
             onClick={(e) => e.stopPropagation()}
           >
             {/* 关闭按钮 */}
@@ -419,12 +438,19 @@ export default function VideoCard({
                   {source_name && <span className='border border-gray-500/50 rounded px-2 py-0.5'>{source_name}</span>}
                 </div>
 
+                {/* 剧情简介 */}
+                {(detailDesc || detailLoading) && (
+                  <div className='text-sm leading-relaxed text-gray-800 dark:text-gray-200 max-h-24 overflow-y-auto pr-1'>
+                    {detailLoading ? '加载简介中…' : (detailDesc || '')}
+                  </div>
+                )}
+
                 {/* 选集（聚合搜索时显示简单的选集列表） */}
                 {isAggregate && aggregateData?.first?.episodes && aggregateData.first.episodes.length > 1 && (
                   <div>
                     <h4 className='text-sm font-semibold mb-2 text-gray-800 dark:text-gray-200'>选集</h4>
-                    <div className='grid grid-cols-5 gap-2'>
-                      {aggregateData.first.episodes.slice(0, 10).map((ep, idx) => (
+                    <div className='grid grid-cols-5 gap-2 max-h-36 overflow-y-auto pr-1'>
+                      {aggregateData.first.episodes.map((ep, idx) => (
                         <button
                           key={idx}
                           onClick={() => {
@@ -442,12 +468,23 @@ export default function VideoCard({
                   </div>
                 )}
 
-                <div className='mt-2 flex gap-3'>
+                <div className='mt-2 flex gap-3 flex-wrap'>
                   <button
                     onClick={goPlay}
                     className='px-4 py-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 text-white font-medium hover:from-green-600 hover:to-emerald-700 transition shadow'
                   >
                     立即播放
+                  </button>
+                  <button
+                    onClick={() => {
+                      // 进入播放页提供换源入口
+                      router.push(
+                        `/play?source=${actualSource || aggregateData?.first?.source}&id=${actualId || aggregateData?.first?.id}&title=${encodeURIComponent(actualTitle)}${actualYear ? `&year=${actualYear}` : ''}&prefer=true${actualSearchType ? `&stype=${actualSearchType}` : ''}`
+                      );
+                    }}
+                    className='px-4 py-2 rounded-lg bg-white/70 dark:bg-zinc-800/70 border border-white/20 dark:border-white/10 text-gray-800 dark:text-gray-200 hover:bg-white/80 dark:hover:bg-zinc-700/80 transition'
+                  >
+                    换源/更多
                   </button>
                   <button
                     onClick={() => setPreviewOpen(false)}
