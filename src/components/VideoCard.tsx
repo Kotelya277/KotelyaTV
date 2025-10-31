@@ -3,7 +3,7 @@
 import { CheckCircle, Heart, Link, PlayCircleIcon, X } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
   deleteFavorite,
@@ -63,6 +63,7 @@ export default function VideoCard({
   const [previewVisible, setPreviewVisible] = useState(false);
   const [detailDesc, setDetailDesc] = useState<string>('');
   const [detailLoading, setDetailLoading] = useState(false);
+  const modalRef = useRef<HTMLDivElement | null>(null);
 
   const isAggregate = from === 'search' && !!items?.length;
 
@@ -225,6 +226,40 @@ export default function VideoCard({
     }
   }, []);
 
+  // 焦点陷阱：在预览开启时，将焦点限制在对话框内部
+  useEffect(() => {
+    if (!previewOpen) return;
+    const dialog = modalRef.current;
+    if (!dialog) return;
+
+    const selector = 'a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])';
+    const focusables = Array.from(dialog.querySelectorAll<HTMLElement>(selector)).filter((el) => !el.hasAttribute('disabled'));
+    // 初始聚焦第一个可聚焦元素
+    focusables[0]?.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setPreviewVisible(false);
+        setTimeout(() => setPreviewOpen(false), 200);
+        return;
+      }
+      if (e.key === 'Tab') {
+        if (focusables.length === 0) return;
+        const currentIndex = focusables.indexOf(document.activeElement as HTMLElement);
+        let nextIndex = currentIndex;
+        if (e.shiftKey) {
+          nextIndex = currentIndex <= 0 ? focusables.length - 1 : currentIndex - 1;
+        } else {
+          nextIndex = currentIndex === focusables.length - 1 ? 0 : currentIndex + 1;
+        }
+        focusables[nextIndex]?.focus();
+        e.preventDefault();
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [previewOpen]);
+
   const config = useMemo(() => {
     const configs = {
       playrecord: {
@@ -271,6 +306,22 @@ export default function VideoCard({
     <div
       className='group relative w-full rounded-lg bg-transparent cursor-pointer transition-all duration-300 ease-in-out hover:scale-[1.05] hover:z-[500]'
       onClick={handleClick}
+      tabIndex={0}
+      role='button'
+      aria-label={`打开 ${actualTitle} 预览`}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleClick();
+        }
+        // 简易左右导航：在卡片容器同级间移动焦点
+        if (e.key === 'ArrowRight') {
+          (e.currentTarget.parentElement?.nextElementSibling as HTMLElement | null)?.querySelector('[role="button"]')?.focus();
+        }
+        if (e.key === 'ArrowLeft') {
+          (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.querySelector('[role="button"]')?.focus();
+        }
+      }}
     >
       {/* 海报容器 */}
       <div className='relative aspect-[2/3] overflow-hidden rounded-lg'>
@@ -406,7 +457,11 @@ export default function VideoCard({
           }}
         >
           <div
-            className={`relative w-full md:max-w-3xl bg-white/80 dark:bg-zinc-900/80 md:rounded-2xl rounded-t-2xl shadow-2xl border border-white/10 dark:border-white/10 overflow-hidden transition-all duration-200 ease-out ${previewVisible ? 'opacity-100 md:scale-100 translate-y-0' : 'opacity-0 md:scale-95 translate-y-4'} md:bottom-auto md:left-auto md:right-auto md:top-auto bottom-0 md:relative`}
+            ref={modalRef}
+            role='dialog'
+            aria-modal='true'
+            aria-label={`${actualTitle} 预览`}
+            className={`relative w-full md:max-w-3xl bg-white/80 dark:bg-zinc-900/80 md:rounded-2xl rounded-t-2xl shadow-2xl border border-white/10 dark:border-white/10 overflow-hidden transition-all duration-300 ease-[cubic-bezier(.22,.61,.36,1)] ${previewVisible ? 'opacity-100 md:scale-100 translate-y-0' : 'opacity-0 md:scale-95 translate-y-4'} md:bottom-auto md:left-auto md:right-auto md:top-auto bottom-0 md:relative`}
             onClick={(e) => e.stopPropagation()}
           >
             {/* 关闭按钮 */}
@@ -461,7 +516,7 @@ export default function VideoCard({
                           }}
                           className='text-xs px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition'
                         >
-                          第{idx + 1}集
+                          {aggregateData.first.episodes_titles?.[idx] || `第${idx + 1}集`}
                         </button>
                       ))}
                     </div>
@@ -493,6 +548,34 @@ export default function VideoCard({
                     取消
                   </button>
                 </div>
+                {/* 更多来源列表（聚合搜索时） */}
+                {isAggregate && items && items.length > 1 && (
+                  <div className='mt-3'>
+                    <h4 className='text-sm font-semibold mb-2 text-gray-800 dark:text-gray-200'>更多来源</h4>
+                    <div className='flex flex-wrap gap-2 max-h-16 overflow-y-auto'>
+                      {Array.from(
+                        new Map(
+                          items.map((it) => [it.source + ':' + it.id, it])
+                        ).values()
+                      )
+                        .slice(0, 12)
+                        .map((it, i) => (
+                          <button
+                            key={i}
+                            onClick={() => {
+                              router.push(
+                                `/play?source=${it.source}&id=${it.id}&title=${encodeURIComponent(actualTitle)}${actualYear ? `&year=${actualYear}` : ''}${actualSearchType ? `&stype=${actualSearchType}` : ''}`
+                              );
+                            }}
+                            className='text-xs px-2 py-1 rounded bg-white/70 dark:bg-zinc-800/70 border border-white/20 dark:border-white/10 text-gray-800 dark:text-gray-200 hover:bg-white/80 dark:hover:bg-zinc-700/80 transition'
+                            title={it.source_name}
+                          >
+                            {it.source_name || it.source}
+                          </button>
+                        ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
