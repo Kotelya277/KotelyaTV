@@ -31,7 +31,7 @@ function HomeClient() {
   const [hotVarietyShows, setHotVarietyShows] = useState<DoubanItem[]>([]);
   const [hotAnime, setHotAnime] = useState<DoubanItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const { announcement, siteName } = useSite();
+  const { announcement } = useSite();
 
   const [showAnnouncement, setShowAnnouncement] = useState(false);
 

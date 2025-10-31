@@ -8,7 +8,6 @@ import { Suspense, useEffect, useState } from 'react';
 
 import { checkForUpdates, CURRENT_VERSION, UpdateStatus } from '@/lib/version';
 
-import { useSite } from '@/components/SiteProvider';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import BrandPill from '@/components/BrandPill';
 
@@ -77,7 +76,6 @@ function LoginPageClient() {
   const [loading, setLoading] = useState(false);
   const [shouldAskUsername, setShouldAskUsername] = useState(false);
   const [enableRegister, setEnableRegister] = useState(false);
-  const { siteName } = useSite();
 
   // 在客户端挂载后设置配置
   useEffect(() => {
