@@ -67,7 +67,7 @@ function HomeClient() {
         setLoading(true);
 
         // 并行获取热门电影、热门剧集、热门综艺、热门动漫
-        const [moviesData, tvShowsData, varietyShowsData, animeData] = await Promise.all([
+        const [moviesData, tvShowsData, varietyShowsData] = await Promise.all([
           getDoubanCategories({
             kind: 'movie',
             category: '热门',
@@ -75,9 +75,6 @@ function HomeClient() {
           }),
           getDoubanCategories({ kind: 'tv', category: 'tv', type: 'tv' }),
           getDoubanCategories({ kind: 'tv', category: 'show', type: 'show' }),
-          // 说明：recent_hot 接口不支持 "anime" 分类，这会导致返回与综艺/电视剧类似的数据。
-          // 因此改用 j/search_subjects 列表接口，通过标签 "动画" 获取动漫（type 固定为 tv）。
-          getDoubanList({ type: 'tv', tag: '动画', pageLimit: 20, pageStart: 0 }),
         ]);
 
         if (moviesData.code === 200) {
@@ -90,6 +87,32 @@ function HomeClient() {
 
         if (varietyShowsData.code === 200) {
           setHotVarietyShows(varietyShowsData.list);
+        }
+
+        // 动漫采用列表接口，并添加标签回退：动画 → 日本动画 → 国产动画
+        let animeData = await getDoubanList({
+          type: 'tv',
+          tag: '动画',
+          pageLimit: 20,
+          pageStart: 0,
+        });
+
+        if (animeData.code === 200 && animeData.list.length === 0) {
+          animeData = await getDoubanList({
+            type: 'tv',
+            tag: '日本动画',
+            pageLimit: 20,
+            pageStart: 0,
+          });
+        }
+
+        if (animeData.code === 200 && animeData.list.length === 0) {
+          animeData = await getDoubanList({
+            type: 'tv',
+            tag: '国产动画',
+            pageLimit: 20,
+            pageStart: 0,
+          });
         }
 
         if (animeData.code === 200) {
