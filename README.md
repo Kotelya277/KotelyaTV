@@ -1,10 +1,10 @@
-# WenXiTV
+# KotelyaTV
 
 <div align="center">
-  <img src="public/logo.png" alt="LibreTV Logo" width="120">
+  <img src="public/logo.png" alt="KotelyaTV Logo" width="120">
 </div>
 
-> 🎬 **WenXiTV** 是一个开箱即用的、跨平台的影视聚合播放器。它基于 **Next.js 14** + **Tailwind&nbsp;CSS** + **TypeScript** 构建，支持多资源搜索、在线播放、收藏同步、播放记录、本地/云端存储，让你可以随时随地畅享海量免费影视内容。
+> 🎬 **KotelyaTV** 是一个开箱即用的、跨平台的影视聚合播放器。它基于 **Next.js 14** + **Tailwind&nbsp;CSS** + **TypeScript** 构建，支持多资源搜索、在线播放、收藏同步、播放记录、本地/云端存储，让你可以随时随地畅享海量免费影视内容。
 
 <div align="center">
 
@@ -26,15 +26,33 @@
 - ❤️ **收藏 + 继续观看**：支持 Redis/D1/Upstash 存储，多端同步进度。
 - 📱 **PWA**：离线缓存、安装到桌面/主屏，移动端原生体验。
 - 🌗 **响应式布局**：桌面侧边栏 + 移动底部导航，自适应各种屏幕尺寸。
+- 🧪 **现代化 UI**：底栏与品牌标签采用液态玻璃（glassmorphism）+ 超大圆角（pill）设计，层次更柔和。
 - 🚀 **极简部署**：一条 Docker 命令即可将完整服务跑起来，或免费部署到 Vercel、Netlify 和 ~~Cloudflare~~。
 - 👿 **智能去广告**：自动跳过视频中的切片广告（实验性）
 
 <details>
   <summary>点击查看项目截图</summary>
-  <img src="public/screenshot1.png" alt="项目截图" style="max-width:600px">
-  <img src="public/screenshot2.png" alt="项目截图" style="max-width:600px">
-  <img src="public/screenshot3.png" alt="项目截图" style="max-width:600px">
+  <img src="public/screenshot1.png" alt="首页截图" style="max-width:600px">
+  <img src="public/screenshot2.png" alt="搜索页截图" style="max-width:600px">
+  <img src="public/screenshot3.png" alt="播放页截图" style="max-width:600px">
 </details>
+
+## 🚀 快速开始（本地）
+
+- 克隆仓库：`git clone <your-fork-or-repo-url>`
+- 安装依赖：`pnpm install`（或 `npm install` / `yarn`）
+- 启动开发：`pnpm dev`，访问 `http://localhost:3000/`
+- 可选环境变量：
+  - `NEXT_PUBLIC_SITE_NAME` 设置站点名（默认 `MoonTV`）
+  - `PASSWORD` 设置管理密码（非 localstorage 部署建议设置）
+  - 豆瓣代理配置见下文“环境变量”与“配置说明”
+
+## 🔥 最近更新（UI 与首页）
+
+- 底栏统一玻璃拟态：`bg-white/40 dark:bg-zinc-900/40` + `backdrop-blur-xl`，更浅边框与柔和阴影
+- 新增品牌标签组件 `BrandPill`，在首页、搜索页、播放页保持一致的品牌展示
+- 首页新增“热门动漫”分区，使用豆瓣列表接口并带标签回退（动画 → 日本动画 → 国产动画）以保证内容稳定
+- “查看更多”链接更新为 `douban?type=tv&label=动画`，在豆瓣页更精准聚焦动画内容
 
 ## 🗺 目录
 
