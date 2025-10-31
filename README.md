@@ -335,6 +335,37 @@ MoonTV 支持标准的苹果 CMS V10 API 格式。
 
 修改后 **无需重新构建**，服务会在启动时读取一次。
 
+## 贡献指南
+
+欢迎贡献！为提高协作效率，请遵循以下约定：
+
+- 分支策略
+  - 从 `kotelya-import` 或你的工作分支创建功能分支，例如：`feat/brand-pill-in-admin`
+  - `main` 建议保持受保护状态，仅通过合并受控的 PR 更新
+
+- 提交规范（Conventional Commits）
+  - `feat(ui): add BrandPill to search page`
+  - `fix(home): ensure Hot Anime shows content by tag fallback`
+  - `docs(README): add Project Statement and Important Changes`
+
+- 开发流程
+  - Fork 仓库 → 创建分支 → `pnpm install` → `pnpm dev` 运行预览
+  - UI 改动建议附带截图（首页、搜索、播放等关键页面）
+  - 如涉及新接口或存储方式，请在 README/README.en.md 中补充简要说明
+
+- 代码规范
+  - 使用 TypeScript，避免一字母变量名；保持与现有代码风格一致
+  - 优先修复问题的根因，避免表面级 Patch
+  - 不引入新的格式化工具或全局规则，除非项目级共识
+
+- Pull Request 要求
+  - 清晰描述改动与动机，必要时关联 Issue
+  - 本地构建与基本功能验证通过（预览无重大报错）
+  - 说明是否变更 `config.json` 或需要新增环境变量
+  - 涉及 UI 的 PR 尽量附截图与对比说明
+
+> 英文版贡献说明请参考 `README.en.md` 的 Contributing 章节。
+
 ## 管理员配置
 
 **该特性目前仅支持通过非 localstorage 存储的部署方式使用**
