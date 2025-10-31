@@ -47,6 +47,27 @@
   - `PASSWORD` 设置管理密码（非 localstorage 部署建议设置）
   - 豆瓣代理配置见下文“环境变量”与“配置说明”
 
+### 🐳 一步到位 Docker 部署
+
+```bash
+docker pull ghcr.io/lunatechlab/moontv:latest
+docker run -d --name kotelyatv -p 3000:3000 \
+  -e PASSWORD=your_password ghcr.io/lunatechlab/moontv:latest
+```
+
+访问 `http://<服务器 IP>:3000` 即可。
+
+### ▲ 一步到位 Vercel 部署
+
+1. Fork 本仓库到你的 GitHub。
+2. Vercel → Add New Project → 选择 Fork 后的仓库。
+3. 设置环境变量：`PASSWORD=your_password`（可选 `NEXT_PUBLIC_SITE_NAME`）。
+4. 点击部署。之后 push 到 `main` 将自动触发重建。
+
+如需 Upstash Redis：设置 `NEXT_PUBLIC_STORAGE_TYPE=upstash`，并配置 `UPSTASH_URL`、`UPSTASH_TOKEN`、`USERNAME`、`PASSWORD`。
+
+> 英文版文档请见 `README.en.md`（包含 Contributing 与 Release Notes）。
+
 ## 🔥 最近更新（UI 与首页）
 
 - 底栏统一玻璃拟态：`bg-white/40 dark:bg-zinc-900/40` + `backdrop-blur-xl`，更浅边框与柔和阴影
