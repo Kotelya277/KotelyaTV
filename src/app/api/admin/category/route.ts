@@ -10,7 +10,7 @@ import { IStorage } from '@/lib/types';
 export const runtime = 'edge';
 
 // 支持的操作类型
-type Action = 'add' | 'disable' | 'enable' | 'delete' | 'sort';
+type Action = 'add' | 'disable' | 'enable' | 'delete' | 'sort' | 'import';
 
 interface BaseBody {
   action?: Action;
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     const username = authInfo.username;
 
     // 基础校验
-    const ACTIONS: Action[] = ['add', 'disable', 'enable', 'delete', 'sort'];
+    const ACTIONS: Action[] = ['add', 'disable', 'enable', 'delete', 'sort', 'import'];
     if (!username || !action || !ACTIONS.includes(action)) {
       return NextResponse.json({ error: '参数格式错误' }, { status: 400 });
     }
@@ -179,6 +179,26 @@ export async function POST(request: NextRequest) {
         adminConfig.CustomCategories = newList;
         break;
       }
+      case 'import': {
+        const { categories } = body as { categories?: Array<{ name?: string; type: 'movie' | 'tv'; query: string; disabled?: boolean }> };
+        if (!Array.isArray(categories)) {
+          return NextResponse.json({ error: 'categories 必须为数组' }, { status: 400 });
+        }
+        const sanitized = categories
+          .filter((c) => c && typeof c.query === 'string' && (c.type === 'movie' || c.type === 'tv'))
+          .map((c) => ({
+            name: c.name || '',
+            type: c.type,
+            query: c.query,
+            from: 'custom' as const,
+            disabled: Boolean(c.disabled),
+          }));
+        if (sanitized.length === 0) {
+          return NextResponse.json({ error: '导入列表为空或格式不正确' }, { status: 400 });
+        }
+        adminConfig.CustomCategories = sanitized;
+        break;
+      }
       default:
         return NextResponse.json({ error: '未知操作' }, { status: 400 });
     }
@@ -205,5 +225,44 @@ export async function POST(request: NextRequest) {
       },
       { status: 500 }
     );
+  }
+}
+
+// 导出当前自定义分类配置
+export async function GET(request: NextRequest) {
+  const storageType = process.env.NEXT_PUBLIC_STORAGE_TYPE || 'localstorage';
+  if (storageType === 'localstorage') {
+    return NextResponse.json(
+      { error: '不支持本地存储进行管理员配置' },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const authInfo = getAuthInfoFromCookie(request);
+    if (!authInfo || !authInfo.username) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    const adminConfig = await getConfig();
+
+    const username = authInfo.username;
+    if (username !== process.env.USERNAME) {
+      const userEntry = adminConfig.UserConfig.Users.find((u) => u.username === username);
+      if (!userEntry || userEntry.role !== 'admin' || userEntry.banned) {
+        return NextResponse.json({ error: '权限不足' }, { status: 401 });
+      }
+    }
+
+    const json = JSON.stringify(adminConfig.CustomCategories, null, 2);
+    return new NextResponse(json, {
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': 'no-store',
+        'Content-Disposition': 'attachment; filename="categories.json"',
+      },
+    });
+  } catch (error) {
+    console.error('导出分类失败:', error);
+    return NextResponse.json({ error: '导出失败', details: (error as Error).message }, { status: 500 });
   }
 }

@@ -1294,19 +1294,88 @@ const CategoryConfig = ({
             </span>
           )}
         </h4>
-        <button
-          onClick={() =>
-            !isD1Storage && !isUpstashStorage && setShowAddForm(!showAddForm)
-          }
-          disabled={isD1Storage || isUpstashStorage}
-          className={`px-3 py-1 text-sm rounded-lg transition-colors ${
+        <div className='flex items-center gap-2'>
+          <button
+            onClick={() =>
+              !isD1Storage && !isUpstashStorage && setShowAddForm(!showAddForm)
+            }
+            disabled={isD1Storage || isUpstashStorage}
+            className={`px-3 py-1 text-sm rounded-lg transition-colors ${
+              isD1Storage || isUpstashStorage
+                ? 'bg-gray-400 cursor-not-allowed text-white'
+                : 'bg-green-600 hover:bg-green-700 text-white'
+            }`}
+          >
+            {showAddForm ? '取消' : '添加分类'}
+          </button>
+
+          {/* 导出分类 */}
+          <button
+            onClick={async () => {
+              try {
+                const resp = await fetch('/api/admin/category', { method: 'GET' });
+                if (resp.ok) {
+                  const text = await resp.text();
+                  const blob = new Blob([text], { type: 'application/json' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = 'categories.json';
+                  document.body.appendChild(a);
+                  a.click();
+                  a.remove();
+                  URL.revokeObjectURL(url);
+                  showSuccess('已导出分类配置');
+                } else {
+                  throw new Error('导出失败');
+                }
+              } catch (err) {
+                showError(err instanceof Error ? err.message : '导出失败');
+              }
+            }}
+            className='px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors'
+          >
+            导出分类
+          </button>
+
+          {/* 导入分类（禁用 d1/upstash） */}
+          <label className={`px-3 py-1 text-sm rounded-lg transition-colors ${
             isD1Storage || isUpstashStorage
               ? 'bg-gray-400 cursor-not-allowed text-white'
-              : 'bg-green-600 hover:bg-green-700 text-white'
-          }`}
-        >
-          {showAddForm ? '取消' : '添加分类'}
-        </button>
+              : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700/40 dark:hover:bg-gray-700/60 text-gray-800 dark:text-gray-200 cursor-pointer'
+          }`}>
+            导入分类
+            <input
+              type='file'
+              accept='application/json'
+              className='hidden'
+              disabled={isD1Storage || isUpstashStorage}
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                try {
+                  const text = await file.text();
+                  const data = JSON.parse(text);
+                  if (!Array.isArray(data)) throw new Error('文件格式错误，应为数组');
+                  const resp = await fetch('/api/admin/category', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'import', categories: data }),
+                  });
+                  if (!resp.ok) {
+                    const info = await resp.json().catch(() => ({}));
+                    throw new Error(info.error || '导入失败');
+                  }
+                  await refreshConfig();
+                  showSuccess('导入分类成功');
+                  e.target.value = '';
+                } catch (err) {
+                  showError(err instanceof Error ? err.message : '导入失败');
+                }
+              }}
+            />
+          </label>
+        </div>
       </div>
 
       {showAddForm && !isD1Storage && !isUpstashStorage && (
