@@ -18,6 +18,14 @@
 
 ---
 
+## 项目声明
+
+本项目自「MoonTV」演进而来，为其二创/继承版本，持续维护与改进功能与体验。保留并致谢原作者与社区贡献者。
+
+## 重要变更
+
+🔔 为确保项目长期稳定运行和合规性，并响应用户社区建议，内置视频源已移除。使用完整功能需要用户自行配置资源站（在根目录 `config.json` 中）。我们提供了经过测试的推荐配置文件，帮助你快速上手使用。
+
 ## ✨ 功能特性
 
 - 🔍 **多源聚合搜索**：内置数十个免费资源站点，一次搜索立刻返回全源结果。
@@ -43,9 +51,30 @@
 - 安装依赖：`pnpm install`（或 `npm install` / `yarn`）
 - 启动开发：`pnpm dev`，访问 `http://localhost:3000/`
 - 可选环境变量：
-  - `NEXT_PUBLIC_SITE_NAME` 设置站点名（默认 `MoonTV`）
+  - `NEXT_PUBLIC_SITE_NAME` 设置站点名（默认 `KotelyaTV`）
   - `PASSWORD` 设置管理密码（非 localstorage 部署建议设置）
   - 豆瓣代理配置见下文“环境变量”与“配置说明”
+
+### 🐳 一步到位 Docker 部署
+
+```bash
+docker pull ghcr.io/lunatechlab/moontv:latest
+docker run -d --name kotelyatv -p 3000:3000 \
+  -e PASSWORD=your_password ghcr.io/lunatechlab/moontv:latest
+```
+
+访问 `http://<服务器 IP>:3000` 即可。
+
+### ▲ 一步到位 Vercel 部署
+
+1. Fork 本仓库到你的 GitHub。
+2. Vercel → Add New Project → 选择 Fork 后的仓库。
+3. 设置环境变量：`PASSWORD=your_password`（可选 `NEXT_PUBLIC_SITE_NAME`）。
+4. 点击部署。之后 push 到 `main` 将自动触发重建。
+
+如需 Upstash Redis：设置 `NEXT_PUBLIC_STORAGE_TYPE=upstash`，并配置 `UPSTASH_URL`、`UPSTASH_TOKEN`、`USERNAME`、`PASSWORD`。
+
+> 英文版文档请见 `README.en.md`（包含 Contributing 与 Release Notes）。
 
 ## 🔥 最近更新（UI 与首页）
 
@@ -85,11 +114,11 @@
 
 存储支持矩阵
 
-|                   | Docker | Vercel | Netlify |
-| :---------------: | :----: | :----: | :-----: |
-|   localstorage    |   ✅   |   ✅   |   ✅    |
-|    原生 redis     |   ✅   |        |         |
-|   Upstash Redis   |   ☑️   |   ✅   |   ✅    |
+|               | Docker | Vercel | Netlify |
+| :-----------: | :----: | :----: | :-----: |
+| localstorage  |   ✅   |   ✅   |   ✅    |
+|  原生 redis   |   ✅   |        |         |
+| Upstash Redis |   ☑️   |   ✅   |   ✅    |
 
 ✅：经测试支持
 
@@ -305,6 +334,37 @@ custom_category 支持的自定义分类已知如下：
 MoonTV 支持标准的苹果 CMS V10 API 格式。
 
 修改后 **无需重新构建**，服务会在启动时读取一次。
+
+## 贡献指南
+
+欢迎贡献！为提高协作效率，请遵循以下约定：
+
+- 分支策略
+  - 从 `kotelya-import` 或你的工作分支创建功能分支，例如：`feat/brand-pill-in-admin`
+  - `main` 建议保持受保护状态，仅通过合并受控的 PR 更新
+
+- 提交规范（Conventional Commits）
+  - `feat(ui): add BrandPill to search page`
+  - `fix(home): ensure Hot Anime shows content by tag fallback`
+  - `docs(README): add Project Statement and Important Changes`
+
+- 开发流程
+  - Fork 仓库 → 创建分支 → `pnpm install` → `pnpm dev` 运行预览
+  - UI 改动建议附带截图（首页、搜索、播放等关键页面）
+  - 如涉及新接口或存储方式，请在 README/README.en.md 中补充简要说明
+
+- 代码规范
+  - 使用 TypeScript，避免一字母变量名；保持与现有代码风格一致
+  - 优先修复问题的根因，避免表面级 Patch
+  - 不引入新的格式化工具或全局规则，除非项目级共识
+
+- Pull Request 要求
+  - 清晰描述改动与动机，必要时关联 Issue
+  - 本地构建与基本功能验证通过（预览无重大报错）
+  - 说明是否变更 `config.json` 或需要新增环境变量
+  - 涉及 UI 的 PR 尽量附截图与对比说明
+
+> 英文版贡献说明请参考 `README.en.md` 的 Contributing 章节。
 
 ## 管理员配置
 

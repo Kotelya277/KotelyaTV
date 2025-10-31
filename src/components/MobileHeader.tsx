@@ -28,15 +28,7 @@ const MobileHeader = ({ showBackButton = false }: MobileHeaderProps) => {
         </div>
       </div>
 
-      {/* 中间：Logo（绝对居中） */}
-      <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
-        <Link
-          href='/'
-          className='text-2xl font-bold text-green-600 tracking-tight hover:opacity-80 transition-opacity'
-        >
-          {siteName}
-        </Link>
-      </div>
+      {/* 中间：手机端不显示站点名链接 */}
     </header>
   );
 };

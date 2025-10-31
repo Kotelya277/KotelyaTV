@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import BrandPill from '@/components/BrandPill';
 
 export const metadata: Metadata = {
   title: '安全警告 - KotelyaTV',
@@ -8,6 +9,10 @@ export const metadata: Metadata = {
 export default function WarningPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center p-4">
+      {/* 顶部品牌（液态玻璃、超大圆角） */}
+      <div className='absolute top-4 left-1/2 -translate-x-1/2 flex justify-center'>
+        <BrandPill />
+      </div>
       <div className='max-w-2xl w-full bg-white rounded-2xl shadow-2xl p-4 sm:p-8 border border-red-200'>
         {/* 警告图标 */}
         <div className='flex justify-center mb-4 sm:mb-6'>
