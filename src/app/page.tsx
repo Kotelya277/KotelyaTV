@@ -13,7 +13,7 @@ import {
   getAllPlayRecords,
   subscribeToDataUpdates,
 } from '@/lib/db.client';
-import { getDoubanCategories } from '@/lib/douban.client';
+import { getDoubanCategories, getDoubanList } from '@/lib/douban.client';
 import { DoubanItem } from '@/lib/types';
 
 import CapsuleSwitch from '@/components/CapsuleSwitch';
@@ -75,7 +75,9 @@ function HomeClient() {
           }),
           getDoubanCategories({ kind: 'tv', category: 'tv', type: 'tv' }),
           getDoubanCategories({ kind: 'tv', category: 'show', type: 'show' }),
-          getDoubanCategories({ kind: 'tv', category: 'anime', type: 'anime' }),
+          // 说明：recent_hot 接口不支持 "anime" 分类，这会导致返回与综艺/电视剧类似的数据。
+          // 因此改用 j/search_subjects 列表接口，通过标签 "动画" 获取动漫（type 固定为 tv）。
+          getDoubanList({ type: 'tv', tag: '动画', pageLimit: 20, pageStart: 0 }),
         ]);
 
         if (moviesData.code === 200) {
