@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { CheckCircle, Heart, Link, PlayCircleIcon, X } from 'lucide-react';
+import { CheckCircle, Heart, Link, PlayCircleIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
   deleteFavorite,
@@ -17,7 +17,6 @@ import { SearchResult } from '@/lib/types';
 import { processImageUrl } from '@/lib/utils';
 
 import { ImagePlaceholder } from '@/components/ImagePlaceholder';
-import { fetchVideoDetail } from '@/lib/fetchVideoDetail';
 
 interface VideoCardProps {
   id?: string;
@@ -59,17 +58,6 @@ export default function VideoCard({
   const router = useRouter();
   const [favorited, setFavorited] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewVisible, setPreviewVisible] = useState(false);
-  const [detailDesc, setDetailDesc] = useState<string>('');
-  const [detailLoading, setDetailLoading] = useState(false);
-  const modalRef = useRef<HTMLDivElement | null>(null);
-
-  // 辅助函数：在相邻容器中查找可聚焦的卡片按钮并聚焦（避免 Element 类型缺少 focus）
-  const focusRoleButton = (container: Element | null | undefined) => {
-    const el = container?.querySelector('[role="button"]') as HTMLElement | null;
-    el?.focus();
-  };
 
   const isAggregate = from === 'search' && !!items?.length;
 
@@ -203,68 +191,32 @@ export default function VideoCard({
     [from, actualSource, actualId, onDelete]
   );
 
-  const goPlay = useCallback(() => {
+  const handleClick = useCallback(() => {
     if (from === 'douban') {
       router.push(
-        `/play?title=${encodeURIComponent(actualTitle.trim())}${actualYear ? `&year=${actualYear}` : ''}${actualSearchType ? `&stype=${actualSearchType}` : ''}`
+        `/play?title=${encodeURIComponent(actualTitle.trim())}${actualYear ? `&year=${actualYear}` : ''
+        }${actualSearchType ? `&stype=${actualSearchType}` : ''}`
       );
     } else if (actualSource && actualId) {
       router.push(
-        `/play?source=${actualSource}&id=${actualId}&title=${encodeURIComponent(actualTitle)}${actualYear ? `&year=${actualYear}` : ''}${isAggregate ? '&prefer=true' : ''}${actualQuery ? `&stitle=${encodeURIComponent(actualQuery.trim())}` : ''}${actualSearchType ? `&stype=${actualSearchType}` : ''}`
+        `/play?source=${actualSource}&id=${actualId}&title=${encodeURIComponent(
+          actualTitle
+        )}${actualYear ? `&year=${actualYear}` : ''}${isAggregate ? '&prefer=true' : ''
+        }${actualQuery ? `&stitle=${encodeURIComponent(actualQuery.trim())}` : ''
+        }${actualSearchType ? `&stype=${actualSearchType}` : ''}`
       );
     }
-  }, [from, actualSource, actualId, router, actualTitle, actualYear, isAggregate, actualQuery, actualSearchType]);
-
-  const handleClick = useCallback(() => {
-    // 不再直接跳转，改为打开预览卡片
-    setPreviewOpen(true);
-    // 下一帧开启可见动画，避免闪烁
-    requestAnimationFrame(() => setPreviewVisible(true));
-    // 在打开时加载详情简介
-    if (actualSource && actualId) {
-      setDetailLoading(true);
-      fetchVideoDetail({ source: actualSource, id: actualId, fallbackTitle: actualTitle })
-        .then((res) => {
-          setDetailDesc(res.desc || '');
-        })
-        .catch(() => {})
-        .finally(() => setDetailLoading(false));
-    }
-  }, []);
-
-  // 焦点陷阱：在预览开启时，将焦点限制在对话框内部
-  useEffect(() => {
-    if (!previewOpen) return;
-    const dialog = modalRef.current;
-    if (!dialog) return;
-
-    const selector = 'a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])';
-    const focusables = Array.from(dialog.querySelectorAll<HTMLElement>(selector)).filter((el) => !el.hasAttribute('disabled'));
-    // 初始聚焦第一个可聚焦元素
-    focusables[0]?.focus();
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setPreviewVisible(false);
-        setTimeout(() => setPreviewOpen(false), 200);
-        return;
-      }
-      if (e.key === 'Tab') {
-        if (focusables.length === 0) return;
-        const currentIndex = focusables.indexOf(document.activeElement as HTMLElement);
-        let nextIndex = currentIndex;
-        if (e.shiftKey) {
-          nextIndex = currentIndex <= 0 ? focusables.length - 1 : currentIndex - 1;
-        } else {
-          nextIndex = currentIndex === focusables.length - 1 ? 0 : currentIndex + 1;
-        }
-        focusables[nextIndex]?.focus();
-        e.preventDefault();
-      }
-    };
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
-  }, [previewOpen]);
+  }, [
+    from,
+    actualSource,
+    actualId,
+    router,
+    actualTitle,
+    actualYear,
+    isAggregate,
+    actualQuery,
+    actualSearchType,
+  ]);
 
   const config = useMemo(() => {
     const configs = {
@@ -312,22 +264,6 @@ export default function VideoCard({
     <div
       className='group relative w-full rounded-lg bg-transparent cursor-pointer transition-all duration-300 ease-in-out hover:scale-[1.05] hover:z-[500]'
       onClick={handleClick}
-      tabIndex={0}
-      role='button'
-      aria-label={`打开 ${actualTitle} 预览`}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          handleClick();
-        }
-        // 简易左右导航：在卡片容器同级间移动焦点
-        if (e.key === 'ArrowRight') {
-          focusRoleButton(e.currentTarget.parentElement?.nextElementSibling);
-        }
-        if (e.key === 'ArrowLeft') {
-          focusRoleButton(e.currentTarget.parentElement?.previousElementSibling);
-        }
-      }}
     >
       {/* 海报容器 */}
       <div className='relative aspect-[2/3] overflow-hidden rounded-lg'>
@@ -452,141 +388,6 @@ export default function VideoCard({
           </span>
         )}
       </div>
-
-      {/* 预览卡片（Netflix 风） */}
-      {previewOpen && (
-        <div
-          className='fixed inset-0 z-[900] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4'
-          onClick={() => {
-            setPreviewVisible(false);
-            setTimeout(() => setPreviewOpen(false), 200);
-          }}
-        >
-          <div
-            ref={modalRef}
-            role='dialog'
-            aria-modal='true'
-            aria-label={`${actualTitle} 预览`}
-            className={`relative w-full md:max-w-3xl bg-white/80 dark:bg-zinc-900/80 md:rounded-2xl rounded-t-2xl shadow-2xl border border-white/10 dark:border-white/10 overflow-hidden transition-all duration-300 ease-[cubic-bezier(.22,.61,.36,1)] ${previewVisible ? 'opacity-100 md:scale-100 translate-y-0' : 'opacity-0 md:scale-95 translate-y-4'} md:bottom-auto md:left-auto md:right-auto md:top-auto bottom-0 md:relative`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* 关闭按钮 */}
-            <button
-              className='absolute top-3 right-3 p-2 rounded-full bg-white/70 dark:bg-zinc-800/70 border border-white/20 dark:border-white/10 hover:bg-white/80 dark:hover:bg-zinc-700/80 transition'
-              onClick={() => setPreviewOpen(false)}
-              aria-label='关闭'
-            >
-              <X className='w-5 h-5 text-gray-700 dark:text-gray-200' />
-            </button>
-
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-0'>
-              {/* 左侧海报 */}
-              <div className='md:col-span-1 relative aspect-[2/3] bg-black/10'>
-                <Image
-                  src={processImageUrl(actualPoster)}
-                  alt={actualTitle}
-                  fill
-                  className='object-cover'
-                />
-              </div>
-
-              {/* 右侧信息 */}
-              <div className='md:col-span-2 p-5 md:p-6 flex flex-col gap-4'>
-                <h3 className='text-2xl font-bold text-gray-900 dark:text-gray-100'>{actualTitle}</h3>
-                <div className='flex flex-wrap items-center gap-3 text-sm text-gray-600 dark:text-gray-400'>
-                  {actualYear && <span>{actualYear}</span>}
-                  {rate && <span className='px-2 py-0.5 rounded bg-green-500 text-white text-xs'>评分 {rate}</span>}
-                  {source_name && <span className='border border-gray-500/50 rounded px-2 py-0.5'>{source_name}</span>}
-                </div>
-
-                {/* 剧情简介 */}
-                {(detailDesc || detailLoading) && (
-                  <div className='text-sm leading-relaxed text-gray-800 dark:text-gray-200 max-h-24 overflow-y-auto pr-1'>
-                    {detailLoading ? '加载简介中…' : (detailDesc || '')}
-                  </div>
-                )}
-
-                {/* 选集（聚合搜索时显示简单的选集列表） */}
-                {isAggregate && aggregateData?.first?.episodes && aggregateData.first.episodes.length > 1 && (
-                  <div>
-                    <h4 className='text-sm font-semibold mb-2 text-gray-800 dark:text-gray-200'>选集</h4>
-                    <div className='grid grid-cols-5 gap-2 max-h-36 overflow-y-auto pr-1'>
-                      {aggregateData.first.episodes.map((ep, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => {
-                            // 跳转播放并偏好聚合
-                            router.push(
-                              `/play?source=${aggregateData.first.source}&id=${aggregateData.first.id}&title=${encodeURIComponent(actualTitle)}${actualYear ? `&year=${actualYear}` : ''}&prefer=true${actualSearchType ? `&stype=${actualSearchType}` : ''}`
-                            );
-                          }}
-                          className='text-xs px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition'
-                        >
-                          {aggregateData.first.episodes_titles?.[idx] || `第${idx + 1}集`}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div className='mt-2 flex gap-3 flex-wrap'>
-                  <button
-                    onClick={goPlay}
-                    className='px-4 py-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 text-white font-medium hover:from-green-600 hover:to-emerald-700 transition shadow'
-                  >
-                    立即播放
-                  </button>
-                  <button
-                    onClick={() => {
-                      // 进入播放页提供换源入口
-                      router.push(
-                        `/play?source=${actualSource || aggregateData?.first?.source}&id=${actualId || aggregateData?.first?.id}&title=${encodeURIComponent(actualTitle)}${actualYear ? `&year=${actualYear}` : ''}&prefer=true${actualSearchType ? `&stype=${actualSearchType}` : ''}`
-                      );
-                    }}
-                    className='px-4 py-2 rounded-lg bg-white/70 dark:bg-zinc-800/70 border border-white/20 dark:border-white/10 text-gray-800 dark:text-gray-200 hover:bg-white/80 dark:hover:bg-zinc-700/80 transition'
-                  >
-                    换源/更多
-                  </button>
-                  <button
-                    onClick={() => setPreviewOpen(false)}
-                    className='px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition'
-                  >
-                    取消
-                  </button>
-                </div>
-                {/* 更多来源列表（聚合搜索时） */}
-                {isAggregate && items && items.length > 1 && (
-                  <div className='mt-3'>
-                    <h4 className='text-sm font-semibold mb-2 text-gray-800 dark:text-gray-200'>更多来源</h4>
-                    <div className='flex flex-wrap gap-2 max-h-16 overflow-y-auto'>
-                      {Array.from(
-                        new Map(
-                          items.map((it) => [it.source + ':' + it.id, it])
-                        ).values()
-                      )
-                        .slice(0, 12)
-                        .map((it, i) => (
-                          <button
-                            key={i}
-                            onClick={() => {
-                              router.push(
-                                `/play?source=${it.source}&id=${it.id}&title=${encodeURIComponent(actualTitle)}${actualYear ? `&year=${actualYear}` : ''}${actualSearchType ? `&stype=${actualSearchType}` : ''}`
-                              );
-                            }}
-                            className='text-xs px-2 py-1 rounded bg-white/70 dark:bg-zinc-800/70 border border-white/20 dark:border-white/10 text-gray-800 dark:text-gray-200 hover:bg-white/80 dark:hover:bg-zinc-700/80 transition'
-                            title={it.source_name}
-                          >
-                            {it.source_name || it.source}
-                          </button>
-                        ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

@@ -16,10 +16,12 @@ import { SearchResult } from '@/lib/types';
 import { yellowWords } from '@/lib/yellow';
 
 import PageLayout from '@/components/PageLayout';
+import { useSite } from '@/components/SiteProvider';
 import VideoCard from '@/components/VideoCard';
 import BrandPill from '@/components/BrandPill';
 
 function SearchPageClient() {
+  const { siteName } = useSite();
   // 搜索历史
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
   // 返回顶部按钮显示状态
