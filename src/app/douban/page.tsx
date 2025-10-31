@@ -18,6 +18,7 @@ import DoubanCustomSelector from '@/components/DoubanCustomSelector';
 import DoubanSelector from '@/components/DoubanSelector';
 import PageLayout from '@/components/PageLayout';
 import VideoCard from '@/components/VideoCard';
+import BrandPill from '@/components/BrandPill';
 
 function DoubanPageClient() {
   const searchParams = useSearchParams();
@@ -655,6 +656,10 @@ function DoubanPageClient() {
   return (
     <PageLayout activePath={getActivePath()}>
       <div className='px-4 sm:px-10 py-4 sm:py-8 overflow-visible'>
+        {/* 顶部品牌（液态玻璃、超大圆角） */}
+        <div className='mb-4 flex justify-center'>
+          <BrandPill />
+        </div>
         {/* 页面标题和选择器 */}
         <div className='mb-6 sm:mb-8 space-y-4 sm:space-y-6'>
           {/* 页面标题 */}

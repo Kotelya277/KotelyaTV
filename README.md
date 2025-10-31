@@ -43,7 +43,7 @@
 - 安装依赖：`pnpm install`（或 `npm install` / `yarn`）
 - 启动开发：`pnpm dev`，访问 `http://localhost:3000/`
 - 可选环境变量：
-  - `NEXT_PUBLIC_SITE_NAME` 设置站点名（默认 `MoonTV`）
+  - `NEXT_PUBLIC_SITE_NAME` 设置站点名（默认 `KotelyaTV`）
   - `PASSWORD` 设置管理密码（非 localstorage 部署建议设置）
   - 豆瓣代理配置见下文“环境变量”与“配置说明”
 
@@ -85,11 +85,11 @@
 
 存储支持矩阵
 
-|                   | Docker | Vercel | Netlify |
-| :---------------: | :----: | :----: | :-----: |
-|   localstorage    |   ✅   |   ✅   |   ✅    |
-|    原生 redis     |   ✅   |        |         |
-|   Upstash Redis   |   ☑️   |   ✅   |   ✅    |
+|               | Docker | Vercel | Netlify |
+| :-----------: | :----: | :----: | :-----: |
+| localstorage  |   ✅   |   ✅   |   ✅    |
+|  原生 redis   |   ✅   |        |         |
+| Upstash Redis |   ☑️   |   ✅   |   ✅    |
 
 ✅：经测试支持
 
