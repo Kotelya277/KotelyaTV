@@ -377,7 +377,7 @@ function HomeClient() {
                     热门动漫
                   </h2>
                   <Link
-                    href='/douban?type=anime'
+                    href='/douban?type=tv&label=动画'
                     className='flex items-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
                   >
                     查看更多
