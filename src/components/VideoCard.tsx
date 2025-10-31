@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { CheckCircle, Heart, Link, PlayCircleIcon } from 'lucide-react';
+import { CheckCircle, Heart, Link, PlayCircleIcon, X } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -58,6 +58,7 @@ export default function VideoCard({
   const router = useRouter();
   const [favorited, setFavorited] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   const isAggregate = from === 'search' && !!items?.length;
 
@@ -191,32 +192,22 @@ export default function VideoCard({
     [from, actualSource, actualId, onDelete]
   );
 
-  const handleClick = useCallback(() => {
+  const goPlay = useCallback(() => {
     if (from === 'douban') {
       router.push(
-        `/play?title=${encodeURIComponent(actualTitle.trim())}${actualYear ? `&year=${actualYear}` : ''
-        }${actualSearchType ? `&stype=${actualSearchType}` : ''}`
+        `/play?title=${encodeURIComponent(actualTitle.trim())}${actualYear ? `&year=${actualYear}` : ''}${actualSearchType ? `&stype=${actualSearchType}` : ''}`
       );
     } else if (actualSource && actualId) {
       router.push(
-        `/play?source=${actualSource}&id=${actualId}&title=${encodeURIComponent(
-          actualTitle
-        )}${actualYear ? `&year=${actualYear}` : ''}${isAggregate ? '&prefer=true' : ''
-        }${actualQuery ? `&stitle=${encodeURIComponent(actualQuery.trim())}` : ''
-        }${actualSearchType ? `&stype=${actualSearchType}` : ''}`
+        `/play?source=${actualSource}&id=${actualId}&title=${encodeURIComponent(actualTitle)}${actualYear ? `&year=${actualYear}` : ''}${isAggregate ? '&prefer=true' : ''}${actualQuery ? `&stitle=${encodeURIComponent(actualQuery.trim())}` : ''}${actualSearchType ? `&stype=${actualSearchType}` : ''}`
       );
     }
-  }, [
-    from,
-    actualSource,
-    actualId,
-    router,
-    actualTitle,
-    actualYear,
-    isAggregate,
-    actualQuery,
-    actualSearchType,
-  ]);
+  }, [from, actualSource, actualId, router, actualTitle, actualYear, isAggregate, actualQuery, actualSearchType]);
+
+  const handleClick = useCallback(() => {
+    // 不再直接跳转，改为打开预览卡片
+    setPreviewOpen(true);
+  }, []);
 
   const config = useMemo(() => {
     const configs = {
@@ -388,6 +379,88 @@ export default function VideoCard({
           </span>
         )}
       </div>
+
+      {/* 预览卡片（Netflix 风） */}
+      {previewOpen && (
+        <div
+          className='fixed inset-0 z-[900] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4'
+          onClick={() => setPreviewOpen(false)}
+        >
+          <div
+            className='relative w-full max-w-3xl bg-white/80 dark:bg-zinc-900/80 rounded-2xl shadow-2xl border border-white/10 dark:border-white/10 overflow-hidden'
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* 关闭按钮 */}
+            <button
+              className='absolute top-3 right-3 p-2 rounded-full bg-white/70 dark:bg-zinc-800/70 border border-white/20 dark:border-white/10 hover:bg-white/80 dark:hover:bg-zinc-700/80 transition'
+              onClick={() => setPreviewOpen(false)}
+              aria-label='关闭'
+            >
+              <X className='w-5 h-5 text-gray-700 dark:text-gray-200' />
+            </button>
+
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-0'>
+              {/* 左侧海报 */}
+              <div className='md:col-span-1 relative aspect-[2/3] bg-black/10'>
+                <Image
+                  src={processImageUrl(actualPoster)}
+                  alt={actualTitle}
+                  fill
+                  className='object-cover'
+                />
+              </div>
+
+              {/* 右侧信息 */}
+              <div className='md:col-span-2 p-5 md:p-6 flex flex-col gap-4'>
+                <h3 className='text-2xl font-bold text-gray-900 dark:text-gray-100'>{actualTitle}</h3>
+                <div className='flex flex-wrap items-center gap-3 text-sm text-gray-600 dark:text-gray-400'>
+                  {actualYear && <span>{actualYear}</span>}
+                  {rate && <span className='px-2 py-0.5 rounded bg-green-500 text-white text-xs'>评分 {rate}</span>}
+                  {source_name && <span className='border border-gray-500/50 rounded px-2 py-0.5'>{source_name}</span>}
+                </div>
+
+                {/* 选集（聚合搜索时显示简单的选集列表） */}
+                {isAggregate && aggregateData?.first?.episodes && aggregateData.first.episodes.length > 1 && (
+                  <div>
+                    <h4 className='text-sm font-semibold mb-2 text-gray-800 dark:text-gray-200'>选集</h4>
+                    <div className='grid grid-cols-5 gap-2'>
+                      {aggregateData.first.episodes.slice(0, 10).map((ep, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => {
+                            // 跳转播放并偏好聚合
+                            router.push(
+                              `/play?source=${aggregateData.first.source}&id=${aggregateData.first.id}&title=${encodeURIComponent(actualTitle)}${actualYear ? `&year=${actualYear}` : ''}&prefer=true${actualSearchType ? `&stype=${actualSearchType}` : ''}`
+                            );
+                          }}
+                          className='text-xs px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition'
+                        >
+                          第{idx + 1}集
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className='mt-2 flex gap-3'>
+                  <button
+                    onClick={goPlay}
+                    className='px-4 py-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 text-white font-medium hover:from-green-600 hover:to-emerald-700 transition shadow'
+                  >
+                    立即播放
+                  </button>
+                  <button
+                    onClick={() => setPreviewOpen(false)}
+                    className='px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition'
+                  >
+                    取消
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
