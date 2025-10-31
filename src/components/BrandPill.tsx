@@ -9,7 +9,7 @@ export default function BrandPill({ className = "" }: BrandPillProps) {
         inline-flex items-center justify-center
         px-6 py-3
         text-base sm:text-lg font-bold
-        text-zinc-700 dark:text-zinc-200
+        bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 bg-clip-text text-transparent
         bg-white/30 dark:bg-zinc-900/30
         backdrop-blur-xl
         border border-white/5 dark:border-white/5
