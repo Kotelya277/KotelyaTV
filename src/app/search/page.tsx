@@ -276,14 +276,25 @@ function SearchPageClient() {
         <div className='mb-8'>
           <form onSubmit={handleSearch} className='max-w-2xl mx-auto'>
             <div className='relative'>
-              <Search className='absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400 dark:text-gray-500' />
+              <Search className='absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-500 dark:text-gray-400' />
               <input
                 id='searchInput'
                 type='text'
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder='搜索电影、电视剧...'
-                className='w-full h-12 rounded-lg bg-gray-50/80 py-3 pl-10 pr-10 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:bg-white border border-gray-200/50 shadow-sm dark:bg-gray-800 dark:text-gray-300 dark:placeholder-gray-500 dark:focus:bg-gray-700 dark:border-gray-700'
+                className='
+                  w-full h-14
+                  rounded-[9999px]
+                  bg-white/30 dark:bg-zinc-900/30
+                  backdrop-blur-xl
+                  border border-white/5 dark:border-white/5
+                  shadow-[0_12px_36px_rgba(0,0,0,0.05)]
+                  py-3 pl-12 pr-12 text-sm
+                  text-gray-800 dark:text-gray-100
+                  placeholder-gray-400 dark:placeholder-gray-500
+                  focus:outline-none focus:ring-2 focus:ring-green-400 focus:bg-white/40 dark:focus:bg-zinc-900/40
+                '
               />
               {/* 清空输入按钮 */}
               {searchQuery && (
@@ -294,7 +305,7 @@ function SearchPageClient() {
                     setSearchQuery('');
                     setShowResults(false);
                   }}
-                  className='absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-gray-200 hover:bg-gray-300 text-gray-600 flex items-center justify-center dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-300'
+                  className='absolute right-4 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-white/40 dark:bg-zinc-900/40 backdrop-blur-md border border-white/5 dark:border-white/5 text-gray-700 dark:text-gray-200 flex items-center justify-center hover:bg-white/60 dark:hover:bg-zinc-900/60'
                 >
                   <X className='w-4 h-4' />
                 </button>
