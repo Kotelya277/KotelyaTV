@@ -1986,7 +1986,7 @@ function PlayPageClient() {
         <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
           {/* 文字区 */}
           <div className='md:col-span-3'>
-            <div className='p-6 flex flex-col min-h-0'>
+            <div className='p-6 flex flex-col min-h-0 rounded-2xl bg-white/30 dark:bg-zinc-900/30 backdrop-blur-xl border border-white/5 dark:border-white/5 shadow-[0_12px_36px_rgba(0,0,0,0.05)]'>
               {/* 标题 */}
               <h1 className='text-3xl font-bold mb-2 tracking-wide flex items-center flex-shrink-0 text-center md:text-left w-full'>
                 {videoTitle || '影片标题'}
