@@ -212,13 +212,13 @@ function HomeClient() {
           {activeTab === 'favorites' ? (
             // 收藏夹视图
             <section className='mb-8'>
-              <div className='mb-4 flex items-center justify-between'>
+              <GlassCard className='mb-4 flex items-center justify-between px-4 py-1.5' rounded='pill' intensity='light'>
                 <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200'>
                   我的收藏
                 </h2>
                 {favoriteItems.length > 0 && (
                   <button
-                    className='text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                    className='text-sm text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100'
                     onClick={async () => {
                       await clearAllFavorites();
                       setFavoriteItems([]);
@@ -227,7 +227,7 @@ function HomeClient() {
                     清空
                   </button>
                 )}
-              </div>
+              </GlassCard>
               <div className='justify-start grid grid-cols-3 gap-x-2 gap-y-14 sm:gap-y-20 px-0 sm:px-2 sm:grid-cols-[repeat(auto-fill,_minmax(11rem,_1fr))] sm:gap-x-8'>
                 {favoriteItems.map((item) => (
                   <div key={item.id + item.source} className='w-full'>
@@ -305,7 +305,7 @@ function HomeClient() {
               {/* 热门剧集 */}
               <section className='mb-8'>
                 <div className='mb-4 flex items-center justify-between'>
-                  <GlassCard className='px-4 py-1.5 inline-block bg-white/20 dark:bg-zinc-900/20' rounded='xl' intensity='light'>
+                  <GlassCard className='px-4 py-1.5 inline-block bg-white/20 dark:bg-zinc-900/20' rounded='pill' intensity='light'>
                     <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200'>
                       热门剧集
                     </h2>
@@ -354,7 +354,7 @@ function HomeClient() {
               {/* 热门综艺 */}
               <section className='mb-8'>
                 <div className='mb-4 flex items-center justify-between'>
-                  <GlassCard className='px-4 py-1.5 inline-block bg-white/20 dark:bg-zinc-900/20' rounded='xl' intensity='light'>
+                  <GlassCard className='px-4 py-1.5 inline-block bg-white/20 dark:bg-zinc-900/20' rounded='pill' intensity='light'>
                     <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200'>
                       热门综艺
                     </h2>
@@ -403,7 +403,7 @@ function HomeClient() {
               {/* 热门动漫 */}
               <section className='mb-8'>
                 <div className='mb-4 flex items-center justify-between'>
-                  <GlassCard className='px-4 py-1.5 inline-block bg-white/20 dark:bg-zinc-900/20' rounded='xl' intensity='light'>
+                  <GlassCard className='px-4 py-1.5 inline-block bg-white/20 dark:bg-zinc-900/20' rounded='pill' intensity='light'>
                     <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200'>
                       热门动漫
                     </h2>
