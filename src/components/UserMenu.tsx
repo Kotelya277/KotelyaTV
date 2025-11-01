@@ -423,9 +423,9 @@ export const UserMenu: React.FC = () => {
       />
 
       {/* 菜单面板（液态玻璃） */}
-      <div className='fixed top-14 right-4 w-56 rounded-xl z-[1001] overflow-hidden select-none bg-white/30 dark:bg-zinc-900/30 backdrop-blur-xl border border-white/5 dark:border-white/5 shadow-[0_12px_36px_rgba(0,0,0,0.08)]'>
+      <div className='fixed top-14 right-4 w-56 rounded-xl z-[1001] overflow-hidden select-none bg-white/30 dark:bg-zinc-900/30 backdrop-blur-xl border border-white/5 dark:border-white/5 shadow-[0_8px_24px_rgba(0,0,0,0.06)]'>
         {/* 用户信息区域 */}
-        <div className='px-3 py-2.5 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-gray-100/50 dark:from-gray-800 dark:to-gray-800/50'>
+        <div className='px-3 py-2.5 border-b border-white/5 dark:border-white/5 bg-white/20 dark:bg-zinc-900/20 backdrop-blur-xl'>
           <div className='space-y-1'>
             <div className='flex items-center justify-between'>
               <span className='text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
