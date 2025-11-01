@@ -96,13 +96,21 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
                 href={item.href}
                 className='flex flex-col items-center justify-center w-full h-12 gap-1 text-xs'
               >
-                <item.icon
-                  className={`h-6 w-6 ${
+                <span
+                  className={
                     active
-                      ? 'text-green-600 dark:text-green-400'
-                      : 'text-gray-500 dark:text-gray-400'
-                  }`}
-                />
+                      ? 'px-3 py-2 rounded-[9999px] bg-white/30 dark:bg-zinc-900/30 backdrop-blur-md border border-white/5 dark:border-white/5 shadow-[0_8px_24px_rgba(0,0,0,0.05)]'
+                      : ''
+                  }
+                >
+                  <item.icon
+                    className={`h-6 w-6 ${
+                      active
+                        ? 'text-green-600 dark:text-green-400'
+                        : 'text-gray-500 dark:text-gray-400'
+                    }`}
+                  />
+                </span>
                 <span
                   className={
                     active
