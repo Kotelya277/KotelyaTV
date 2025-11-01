@@ -266,7 +266,14 @@ function DoubanPageClient() {
 
       let data: DoubanResult;
 
-      if (type === 'custom') {
+      if (labelParam && type === 'tv') {
+        data = await getDoubanList({
+          tag: labelParam,
+          type: 'tv',
+          pageLimit: 25,
+          pageStart: 0,
+        });
+      } else if (type === 'custom') {
         // 自定义分类模式：根据选中的一级和二级选项获取对应的分类
         const selectedCategory = customCategories.find(
           (cat) =>
@@ -354,6 +361,7 @@ function DoubanPageClient() {
     multiLevelValues,
     getRequestParams,
     customCategories,
+    labelParam,
   ]);
 
   // 只在选择器准备好后才加载数据
