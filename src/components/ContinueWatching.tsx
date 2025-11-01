@@ -11,6 +11,7 @@ import {
 } from '@/lib/db.client';
 
 import ScrollableRow from '@/components/ScrollableRow';
+import GlassCard from '@/components/GlassCard';
 import VideoCard from '@/components/VideoCard';
 
 interface ContinueWatchingProps {
@@ -122,9 +123,11 @@ export default function ContinueWatching({ className }: ContinueWatchingProps) {
             playRecords.map((record) => {
               const { source, id } = parseKey(record.key);
               return (
-                <div
+                <GlassCard
                   key={record.key}
-                  className='min-w-[96px] w-24 sm:min-w-[180px] sm:w-44'
+                  className='min-w-[96px] w-24 sm:min-w-[180px] sm:w-44 p-2'
+                  rounded='lg'
+                  intensity='light'
                 >
                   <VideoCard
                     id={id}
@@ -145,7 +148,7 @@ export default function ContinueWatching({ className }: ContinueWatchingProps) {
                     }
                     type={record.total_episodes > 1 ? 'tv' : ''}
                   />
-                </div>
+                </GlassCard>
               );
             })}
       </ScrollableRow>

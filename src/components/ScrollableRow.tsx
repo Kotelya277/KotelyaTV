@@ -102,7 +102,7 @@ export default function ScrollableRow({
     >
       <div
         ref={containerRef}
-        className='flex space-x-6 overflow-x-auto scrollbar-hide py-1 sm:py-2 pb-12 sm:pb-14 px-4 sm:px-6'
+        className='flex space-x-6 overflow-x-auto scrollbar-hide py-1 sm:py-2 pb-12 sm:pb-14 px-4 sm:px-6 rounded-2xl bg-white/15 dark:bg-zinc-900/15 backdrop-blur-md border border-white/5 dark:border-white/5'
         onScroll={checkScroll}
       >
         {children}
