@@ -27,7 +27,17 @@ const PageLayout = ({ children, activePath = '/' }: PageLayoutProps) => {
           )}
 
           {/* 桌面端顶部按钮 */}
-          <div className='absolute top-2 right-4 z-20 hidden md:flex items-center gap-2'>
+          <div
+            className='
+              absolute top-2 right-4 z-20 hidden md:flex items-center gap-2
+              px-2 py-1
+              rounded-[9999px]
+              border border-white/5 dark:border-white/5
+              bg-white/40 dark:bg-zinc-900/40
+              backdrop-blur-xl
+              shadow-[0_12px_36px_rgba(0,0,0,0.05)]
+            '
+          >
             <ThemeToggle />
             <UserMenu />
           </div>
