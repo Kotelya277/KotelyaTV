@@ -255,7 +255,7 @@ function HomeClient() {
               {/* 热门电影 */}
               <section className='mb-8'>
                 <div className='mb-4 flex items-center justify-between'>
-                  <GlassCard className='px-4 py-1.5 inline-block bg-white/20 dark:bg-zinc-900/20' rounded='xl' intensity='light'>
+                  <GlassCard className='px-4 py-1.5 inline-block bg-white/20 dark:bg-zinc-900/20' rounded='pill' intensity='light'>
                     <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200'>
                       热门电影
                     </h2>
