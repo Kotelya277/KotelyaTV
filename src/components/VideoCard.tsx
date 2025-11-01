@@ -17,6 +17,7 @@ import { SearchResult } from '@/lib/types';
 import { processImageUrl } from '@/lib/utils';
 
 import { ImagePlaceholder } from '@/components/ImagePlaceholder';
+import GlassCard from '@/components/GlassCard';
 
 interface VideoCardProps {
   id?: string;
@@ -260,7 +261,7 @@ export default function VideoCard({
     return configs[from] || configs.search;
   }, [from, isAggregate, actualDoubanId, rate]);
 
-  return (
+  const cardContent = (
     <div
       className='group relative w-full rounded-lg bg-transparent cursor-pointer transition-all duration-300 ease-in-out hover:scale-[1.05] hover:z-[500]'
       onClick={handleClick}
@@ -392,4 +393,15 @@ export default function VideoCard({
       </div>
     </div>
   );
+
+  // 搜索结果整卡底板：使用超轻玻璃，不改变内部层级
+  if (from === 'search') {
+    return (
+      <GlassCard rounded='lg' intensity='ultra' className='p-2'>
+        {cardContent}
+      </GlassCard>
+    );
+  }
+
+  return cardContent;
 }
