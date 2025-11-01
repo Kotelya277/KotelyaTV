@@ -42,6 +42,7 @@ function DoubanPageClient() {
   });
 
   const type = searchParams.get('type') || 'movie';
+  const labelParam = searchParams.get('label') || '';
 
   // 获取 runtimeConfig 中的自定义分类数据
   const [customCategories, setCustomCategories] = useState<
@@ -176,7 +177,14 @@ function DoubanPageClient() {
     }, 50);
 
     return () => clearTimeout(timer);
-  }, [type, customCategories]);
+    // 如果 URL 中带有 label（如 动画），则切换到“全部”视图并预置标签
+    if (labelParam) {
+      setPrimarySelection('全部');
+      setSecondarySelection(type === 'tv' ? 'tv' : type === 'show' ? 'show' : '全部');
+      setMultiLevelValues((prev) => ({ ...prev, label: labelParam }));
+    }
+
+  }, [type, customCategories, labelParam]);
 
   // 生成骨架屏数据
   const skeletonData = Array.from({ length: 25 }, (_, index) => index);
