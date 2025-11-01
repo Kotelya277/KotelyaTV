@@ -11,6 +11,26 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: '1.0.4',
+    date: '2025-11-01',
+    added: [
+      '管理员页：视频源配置导入/导出（sources.json）',
+      '管理员页：自定义分类导入/导出（categories.json），D1/Upstash 环境保持只读限制',
+      '新增英文版 README（Contributing 与 Release Notes）；中文 README 增补快速开始（Docker/Vercel）',
+    ],
+    changed: [
+      'UI 统一玻璃拟态风格：主页分区标题（电影/剧集/综艺/动漫）、登录页按钮、顶部控制容器、用户菜单等',
+      '搜索页：搜索框改为轻量玻璃拟态并增大圆角，交互更优',
+      '深色模式玻璃优化：整体透明度调轻、边框与阴影更柔，视觉更清晰',
+      '仓库链接统一更新为 https://github.com/Kotelya277/KotelyaTV/tree/main',
+    ],
+    fixed: [
+      '修复首页“热门动漫 → 查看更多”未正确跳到动画页的问题（支持 label=动画）',
+      '修复 ContinueWatching 中重复导入导致的构建错误',
+      "GlassCard 支持 intensity='ultra'，用于更轻玻璃强度配置",
+    ],
+  },
+  {
     version: '1.0.4 Beta',
     date: '2025-10-31',
     added: [
