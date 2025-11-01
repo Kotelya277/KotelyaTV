@@ -32,10 +32,10 @@ const PageLayout = ({ children, activePath = '/' }: PageLayoutProps) => {
               absolute top-2 right-4 z-20 hidden md:flex items-center gap-2
               px-2 py-1
               rounded-[9999px]
-              border border-white/5 dark:border-white/5
-              bg-white/40 dark:bg-zinc-900/40
+              border border-white/5 dark:border-white/8
+              bg-white/40 dark:bg-zinc-900/20
               backdrop-blur-xl
-              shadow-[0_12px_36px_rgba(0,0,0,0.05)]
+              shadow-[0_8px_24px_rgba(0,0,0,0.06)]
             '
           >
             <ThemeToggle />

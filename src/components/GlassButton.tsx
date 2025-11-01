@@ -22,7 +22,7 @@ export default function GlassButton({
   `;
 
   const tints = {
-    none: 'bg-white/30 dark:bg-zinc-900/30 text-gray-900 dark:text-gray-100',
+    none: 'bg-white/30 dark:bg-zinc-900/20 text-gray-900 dark:text-gray-100 border border-white/5 dark:border-white/8',
     green:
       'bg-gradient-to-r from-green-500/80 to-emerald-600/80 hover:from-green-600/80 hover:to-emerald-700/80',
     blue:

@@ -286,14 +286,14 @@ function SearchPageClient() {
                 className='
                   w-full h-14
                   rounded-[9999px]
-                  bg-white/30 dark:bg-zinc-900/30
+                  bg-white/30 dark:bg-zinc-900/20
                   backdrop-blur-xl
-                  border border-white/5 dark:border-white/5
-                  shadow-[0_12px_36px_rgba(0,0,0,0.05)]
+                  border border-white/5 dark:border-white/8
+                  shadow-[0_8px_24px_rgba(0,0,0,0.06)]
                   py-3 pl-12 pr-12 text-sm
                   text-gray-800 dark:text-gray-100
                   placeholder-gray-400 dark:placeholder-gray-500
-                  focus:outline-none focus:ring-2 focus:ring-green-400 focus:bg-white/40 dark:focus:bg-zinc-900/40
+                  focus:outline-none focus:ring-2 focus:ring-green-400 focus:bg-white/40 dark:focus:bg-zinc-900/25
                 '
               />
               {/* 清空输入按钮 */}
@@ -305,7 +305,7 @@ function SearchPageClient() {
                     setSearchQuery('');
                     setShowResults(false);
                   }}
-                  className='absolute right-4 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-white/40 dark:bg-zinc-900/40 backdrop-blur-md border border-white/5 dark:border-white/5 text-gray-700 dark:text-gray-200 flex items-center justify-center hover:bg-white/60 dark:hover:bg-zinc-900/60'
+                  className='absolute right-4 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-white/40 dark:bg-zinc-900/25 backdrop-blur-md border border-white/5 dark:border-white/8 text-gray-700 dark:text-gray-200 flex items-center justify-center hover:bg-white/60 dark:hover:bg-zinc-900/35'
                 >
                   <X className='w-4 h-4' />
                 </button>
