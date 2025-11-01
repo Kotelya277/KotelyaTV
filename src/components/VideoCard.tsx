@@ -368,8 +368,9 @@ export default function VideoCard({
         </div>
       )}
 
-      {/* 标题与来源 */}
+      {/* 标题与来源（轻玻璃卡片） */}
       <div className='mt-2 text-center'>
+        <div className='inline-block px-3 py-2 rounded-[9999px] bg-white/25 dark:bg-zinc-900/25 backdrop-blur-xl border border-white/5 dark:border-white/5 shadow-[0_8px_24px_rgba(0,0,0,0.05)]'>
         <div className='relative'>
           <span className='block text-sm font-semibold truncate text-gray-900 dark:text-gray-100 transition-colors duration-300 ease-in-out group-hover:text-green-600 dark:group-hover:text-green-400 peer'>
             {actualTitle}
@@ -379,6 +380,7 @@ export default function VideoCard({
             {actualTitle}
             <div className='absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800'></div>
           </div>
+        </div>
         </div>
         {config.showSourceName && source_name && (
           <span className='block text-xs text-gray-500 dark:text-gray-400 mt-1'>

@@ -27,6 +27,7 @@ import { getVideoResolutionFromM3u8, processImageUrl } from '@/lib/utils';
 import EpisodeSelector from '@/components/EpisodeSelector';
 import PageLayout from '@/components/PageLayout';
 import BrandPill from '@/components/BrandPill';
+import GlassCard from '@/components/GlassCard';
 
 // 扩展 HTMLVideoElement 类型以支持 hls 属性
 declare global {
@@ -1844,7 +1845,7 @@ function PlayPageClient() {
           <BrandPill />
         </div>
         {/* 第一行：影片标题 */}
-        <div className='py-1'>
+        <GlassCard className='py-2 px-4 inline-block' rounded='pill' intensity='light'>
           <h1 className='text-xl font-semibold text-gray-900 dark:text-gray-100'>
             {videoTitle || '影片标题'}
             {totalEpisodes > 1 && (
@@ -1853,7 +1854,7 @@ function PlayPageClient() {
               </span>
             )}
           </h1>
-        </div>
+        </GlassCard>
         {/* 第二行：播放器和选集 */}
         <div className='space-y-2'>
           {/* 折叠控制 - 仅在 lg 及以上屏幕显示 */}
@@ -1986,7 +1987,7 @@ function PlayPageClient() {
         <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
           {/* 文字区 */}
           <div className='md:col-span-3'>
-            <div className='p-6 flex flex-col min-h-0 rounded-2xl bg-white/30 dark:bg-zinc-900/30 backdrop-blur-xl border border-white/5 dark:border-white/5 shadow-[0_12px_36px_rgba(0,0,0,0.05)]'>
+            <div className='p-6 flex flex-col min-h-0'>
               {/* 标题 */}
               <h1 className='text-3xl font-bold mb-2 tracking-wide flex items-center flex-shrink-0 text-center md:text-left w-full'>
                 {videoTitle || '影片标题'}
