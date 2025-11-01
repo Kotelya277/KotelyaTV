@@ -14,7 +14,7 @@ export default function GlassButton({
   const base = `
     inline-flex items-center justify-center w-full
     px-4 py-3 text-base font-semibold
-    text-white transition-all duration-200
+    transition-all duration-200
     backdrop-blur-xl border border-white/5 dark:border-white/5
     shadow-[0_12px_36px_rgba(0,0,0,0.05)]
     ${rounded === 'pill' ? 'rounded-[9999px]' : 'rounded-lg'}

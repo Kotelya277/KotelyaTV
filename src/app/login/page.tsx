@@ -204,16 +204,16 @@ function LoginPageClient() {
                 type='button'
                 onClick={handleRegister}
                 disabled={!password || !username || loading}
-                tint='blue'
-                className='flex-1'
+                tint='none'
+                className='flex-1 text-blue-700 dark:text-blue-300'
               >
                 {loading ? '注册中...' : '注册'}
               </GlassButton>
               <GlassButton
                 type='submit'
                 disabled={!password || loading || (shouldAskUsername && !username)}
-                tint='green'
-                className='flex-1'
+                tint='none'
+                className='flex-1 text-green-700 dark:text-green-300'
               >
                 {loading ? '登录中...' : '登录'}
               </GlassButton>
@@ -222,8 +222,9 @@ function LoginPageClient() {
             <GlassButton
               type='submit'
               disabled={!password || loading || (shouldAskUsername && !username)}
-              tint='green'
+              tint='none'
               rounded='pill'
+              className='text-green-700 dark:text-green-300'
             >
               {loading ? '登录中...' : '登录'}
             </GlassButton>
