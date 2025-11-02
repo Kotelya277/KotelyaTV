@@ -15,6 +15,8 @@
 
 :root {
   --foreground-rgb: 255, 255, 255;
+  /* 与移动底栏右侧边距统一（像素单位，避免 rem 在不同设备缩放差异） */
+  --bottom-nav-right: 72px; /* 相当于 right-18 */
 }
 
 html,
@@ -30,14 +32,30 @@ body {
 }
 
 html:not(.dark) body {
+  /* 三色渐变：#DCFFFD（清浅青）→ #E7DFFF（浅紫） → #FFE7DF（浅桃） */
   background: linear-gradient(
     180deg,
-    #e6f3fb 0%,
-    #eaf3f7 18%,
-    #f7f7f3 38%,
-    #e9ecef 60%,
-    #dbe3ea 80%,
-    #d3dde6 100%
+    #DCFFFD 0%,
+    #E7DFFF 50%,
+    #FFE7DF 100%
+  );
+  background-attachment: fixed;
+}
+
+/* 在 sm 断点（≥640px）下底栏右侧边距统一为 40px（相当于 right-10） */
+@media (min-width: 640px) {
+  :root {
+    --bottom-nav-right: 40px;
+  }
+}
+
+html.dark body {
+  /* 深色模式：柔和近黑渐变（不太黑） */
+  background: linear-gradient(
+    180deg,
+    #101214 0%,
+    #15171C 60%,
+    #1B1F26 100%
   );
   background-attachment: fixed;
 }

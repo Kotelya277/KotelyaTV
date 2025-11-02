@@ -74,17 +74,18 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
 
   return (
     <nav
-      className='fixed left-6 right-18 sm:left-10 sm:right-10 z-[600] mx-auto max-w-[600px] sm:max-w-[700px] overflow-hidden rounded-[9999px] border bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border-white/5 dark:border-white/5 shadow-[0_12px_36px_rgba(0,0,0,0.05)]'
+      className='fixed left-6 sm:left-10 z-[600] mx-auto max-w-[600px] sm:max-w-[700px] overflow-hidden rounded-[9999px] border bg-white/10 dark:bg-zinc-900/10 backdrop-blur-lg border-white/10 dark:border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.05)]'
       style={{
         bottom: '24px',
+        right: 'var(--bottom-nav-right)',
         paddingBottom: 'env(safe-area-inset-bottom)',
-        minHeight: 'calc(3rem + env(safe-area-inset-bottom))',
+        minHeight: 'calc(3.5rem + env(safe-area-inset-bottom))',
         backdropFilter: 'blur(18px)',
         WebkitBackdropFilter: 'blur(18px)',
       }}
     >
       {/* 底栏主组与搜索单独按钮（移动端样式） */}
-      <div className='flex items-center justify-between w-full px-1 sm:px-2 py-1 sm:py-1.5'>
+      <div className='flex items-center justify-between w-full px-1 sm:px-2 py-1.5 sm:py-1.5 bg-white/10 dark:bg-zinc-900/10 rounded-[9999px]'>
         {/* 主组：底栏内项目（不含搜索） */}
         <ul className='flex flex-nowrap items-center justify-between w-full px-0 gap-1 sm:gap-1'>
           {navItems.map((item) => {
@@ -96,14 +97,14 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
                 >
                   <Link
                     href={item.href}
-                    className='flex flex-col items-center justify-center w-full h-11 sm:h-[52px] gap-1 text-[11px] sm:text-[12px] px-0'
+                    className='flex flex-col items-center justify-center w-full h-12 sm:h-[52px] gap-1 text-[12px] sm:text-[12px] px-0'
                   >
                     <item.icon
-                      className={`h-5 w-5 sm:h-6 sm:w-6 ${
-                        active
-                          ? 'text-green-600 dark:text-green-400'
-                          : 'text-gray-500 dark:text-gray-400'
-                      }`}
+                      className={`h-6 w-6 sm:h-6 sm:w-6 ${
+                         active
+                           ? 'text-green-600 dark:text-green-400'
+                           : 'text-gray-500 dark:text-gray-400'
+                       }`}
                     />
                     <span
                       className={
