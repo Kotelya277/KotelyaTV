@@ -74,9 +74,9 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
 
   return (
     <nav
-      className='fixed left-10 right-10 sm:left-40 sm:right-40 z-[600] mx-auto max-w-[700px] sm:max-w-[540px] overflow-hidden rounded-[9999px] border bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border-white/5 dark:border-white/5 shadow-[0_12px_36px_rgba(0,0,0,0.05)]'
+      className='fixed left-6 right-18 sm:left-10 sm:right-10 z-[600] mx-auto max-w-[600px] sm:max-w-[700px] overflow-hidden rounded-[9999px] border bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border-white/5 dark:border-white/5 shadow-[0_12px_36px_rgba(0,0,0,0.05)]'
       style={{
-        bottom: '12px',
+        bottom: '24px',
         paddingBottom: 'env(safe-area-inset-bottom)',
         minHeight: 'calc(3rem + env(safe-area-inset-bottom))',
         backdropFilter: 'blur(18px)',
@@ -84,22 +84,22 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
       }}
     >
       {/* 底栏主组与搜索单独按钮（移动端样式） */}
-      <div className='flex items-center justify-between w-full px-0 sm:px-0'>
+      <div className='flex items-center justify-between w-full px-1 sm:px-2 py-1 sm:py-1.5'>
         {/* 主组：底栏内项目（不含搜索） */}
-        <ul className='flex flex-nowrap items-center justify-between w-full px-0 gap-1 sm:gap-0'>
+        <ul className='flex flex-nowrap items-center justify-between w-full px-0 gap-1 sm:gap-1'>
           {navItems.map((item) => {
               const active = isActive(item.href);
               return (
                 <li
                   key={item.href}
-                  className='flex-shrink-0 min-w-[48px] sm:min-w-[44px]'
+                  className='flex-shrink-0 min-w-[48px] sm:min-w-[48px]'
                 >
                   <Link
                     href={item.href}
-                    className='flex flex-col items-center justify-center w-full h-11 sm:h-11 gap-1 text-[11px] sm:text-[11px]'
+                    className='flex flex-col items-center justify-center w-full h-11 sm:h-[52px] gap-1 text-[11px] sm:text-[12px] px-0'
                   >
                     <item.icon
-                      className={`h-5 w-5 sm:h-5 sm:w-5 ${
+                      className={`h-5 w-5 sm:h-6 sm:w-6 ${
                         active
                           ? 'text-green-600 dark:text-green-400'
                           : 'text-gray-500 dark:text-gray-400'
