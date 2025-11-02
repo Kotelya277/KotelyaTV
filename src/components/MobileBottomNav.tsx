@@ -2,7 +2,7 @@
 
 'use client';
 
-import { Cat, Clover, Film, Home, Search, Star, Tv } from 'lucide-react';
+import { Cat, Clover, Film, Home, Star, Tv } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -86,7 +86,7 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
       {/* 底栏主组与搜索单独按钮（移动端样式） */}
       <div className='flex items-center justify-between w-full px-2 transform scale-90 sm:scale-100'>
         {/* 主组：底栏内项目（不含搜索） */}
-        <ul className='flex flex-nowrap items-center justify-between w-full px-0'>
+        <ul className='flex flex-nowrap items-center justify-center w-full px-0 sm:gap-2'>
           {navItems.map((item) => {
               const active = isActive(item.href);
               return (
