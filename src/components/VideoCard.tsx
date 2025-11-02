@@ -370,7 +370,7 @@ export default function VideoCard({
 
       {/* 标题与来源（轻玻璃卡片） */}
       <div className='mt-2 text-center'>
-        <div className='inline-block px-3 py-2 rounded-[9999px] bg-white/25 dark:bg-zinc-900/25 backdrop-blur-xl border border-white/5 dark:border-white/5 shadow-[0_8px_24px_rgba(0,0,0,0.05)] mx-1.5 max-w-[88%] mx-auto sm:mx-0 sm:max-w-none'>
+        <div className='inline-block px-3 py-2 rounded-[9999px] bg-white/25 dark:bg-zinc-900/25 backdrop-blur-xl border border-white/5 dark:border-white/5 shadow-[0_8px_24px_rgba(0,0,0,0.05)] mx-1.5 max-w-[88%] mx-auto md:mx-2 md:max-w-[84%]'>
         <div className='relative'>
           <span className='block text-sm font-semibold truncate text-gray-900 dark:text-gray-100 transition-colors duration-300 ease-in-out group-hover:text-green-600 dark:group-hover:text-green-400 peer'>
             {actualTitle}
