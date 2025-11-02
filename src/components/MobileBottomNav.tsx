@@ -74,7 +74,7 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
 
   return (
     <nav
-      className='fixed left-4 right-12 sm:left-0 sm:right-0 z-[600] mx-auto max-w-[680px] sm:max-w-[980px] overflow-hidden rounded-[9999px] border bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border-white/5 dark:border-white/5 shadow-[0_12px_36px_rgba(0,0,0,0.05)]'
+      className='fixed left-2 right-10 sm:left-0 sm:right-0 z-[600] mx-auto max-w-[720px] sm:max-w-[1100px] lg:max-w-[1300px] overflow-hidden rounded-[9999px] border bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border-white/5 dark:border-white/5 shadow-[0_12px_36px_rgba(0,0,0,0.05)]'
       style={{
         bottom: '12px',
         paddingBottom: 'env(safe-area-inset-bottom)',
@@ -86,7 +86,7 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
       {/* 底栏主组与搜索单独按钮（移动端样式） */}
       <div className='flex items-center justify-between w-full px-1 sm:px-2 transform scale-90 sm:scale-100'>
         {/* 主组：底栏内项目（不含搜索） */}
-        <ul className='flex flex-nowrap items-center justify-center w-full px-0 sm:gap-2'>
+        <ul className='flex flex-nowrap items-center justify-between w-full px-0 sm:gap-0'>
           {navItems.map((item) => {
               const active = isActive(item.href);
               return (
@@ -99,7 +99,7 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
                     className='flex flex-col items-center justify-center w-full h-11 sm:h-12 gap-1 text-[11px] sm:text-xs'
                   >
                     <item.icon
-                      className={`h-5 w-5 sm:h-6 sm:w-6 ${
+                      className={`h-4 w-4 sm:h-5 sm:w-5 ${
                         active
                           ? 'text-green-600 dark:text-green-400'
                           : 'text-gray-500 dark:text-gray-400'
