@@ -24,6 +24,7 @@ import { useSite } from '@/components/SiteProvider';
 import VideoCard from '@/components/VideoCard';
 import BrandPill from '@/components/BrandPill';
 import GlassCard from '@/components/GlassCard';
+import GreetingBanner from '@/components/GreetingBanner';
 
 function HomeClient() {
   const [activeTab, setActiveTab] = useState<'home' | 'continue' | 'favorites'>('home');
@@ -190,6 +191,11 @@ function HomeClient() {
   return (
     <PageLayout>
       <div className='px-2 sm:px-10 py-4 sm:py-8 overflow-visible'>
+        {/* 顶部欢迎横幅（置于左上角红框位置） */}
+        <div className='mb-3 flex justify-start'>
+          {/* 仅主页展示欢迎语 */}
+          <GreetingBanner />
+        </div>
         {/* 顶部品牌（液态玻璃、超大圆角） */}
         <div className='mb-4 flex justify-center'>
           <BrandPill />
