@@ -11,6 +11,24 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: '1.0.5 Beta',
+    date: '2025-11-02',
+    added: [
+      '首页新增欢迎横幅 GreetingBanner（时间问候 + 用户名，左上角）',
+      '新增 CSS 变量 --bottom-nav-right，统一移动端底栏与独立搜索按钮的右侧间距',
+    ],
+    changed: [
+      '移动端底栏与搜索按钮统一胶囊与玻璃拟态风格：透明 10%，模糊 backdrop-blur-lg',
+      '调整移动端底栏整体高度与按钮尺寸，图标/文字更易点按；独立搜索按钮尺寸与底栏对齐',
+      '移动端搜索按钮与底栏右缘保持固定距离，适配不同屏幕宽度并避免遮挡',
+      '深色模式背景改为柔和近黑渐变，提升层次与对比度',
+      '浅色模式背景更新为三色渐变（DCFFFD → E7DFFF → FFE7DF）',
+    ],
+    fixed: [
+      // 无修复内容
+    ],
+  },
+  {
     version: '1.0.4',
     date: '2025-11-01',
     added: [
