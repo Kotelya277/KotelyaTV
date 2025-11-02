@@ -9,8 +9,8 @@ export default function FloatingSearchButton() {
       href="/search"
       aria-label="搜索"
       className="
-        fixed z-[650] md:hidden
-        right-10 bottom-[calc(12px+env(safe-area-inset-bottom))]
+        fixed z-[650]
+        right-10 md:right-8 bottom-[calc(12px+env(safe-area-inset-bottom))]
         w-11 h-11 sm:w-12 sm:h-12 rounded-full
         flex items-center justify-center
         bg-white/40 dark:bg-zinc-900/20
