@@ -10,8 +10,8 @@ export default function FloatingSearchButton() {
       aria-label="搜索"
       className="
         fixed z-[650]
-        right-10 md:right-96 bottom-[calc(28px+env(safe-area-inset-bottom))]
-        w-[48px] h-11 sm:w-[48px] sm:h-[52px] rounded-full
+        right-10 md:right-[calc((100vw-700px)/2-80px)] bottom-[calc(28px+env(safe-area-inset-bottom))] md:bottom-[calc(26px+env(safe-area-inset-bottom))]
+        w-[56px] h-12 sm:w-[48px] sm:h-[52px] md:w-[64px] md:h-[64px] rounded-full
         flex items-center justify-center
         bg-white/40 dark:bg-zinc-900/20
         backdrop-blur-xl
@@ -20,7 +20,7 @@ export default function FloatingSearchButton() {
         hover:bg-white/60 dark:hover:bg-zinc-900/35
       "
     >
-      <Search className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700 dark:text-gray-200" />
+      <Search className="w-6 h-6 sm:w-6 sm:h-6 md:w-8 md:h-8 text-gray-700 dark:text-gray-200" />
     </Link>
   );
 }
