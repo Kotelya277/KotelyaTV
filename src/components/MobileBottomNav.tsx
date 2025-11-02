@@ -22,7 +22,6 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
 
   const [navItems, setNavItems] = useState([
     { icon: Home, label: '首页', href: '/' },
-    { icon: Search, label: '搜索', href: '/search' },
     {
       icon: Film,
       label: '电影',
@@ -75,7 +74,7 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
 
   return (
     <nav
-      className='fixed left-0 right-0 z-[600] mx-auto max-w-[680px] sm:max-w-[820px] overflow-hidden rounded-[9999px] border bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border-white/5 dark:border-white/5 shadow-[0_12px_36px_rgba(0,0,0,0.05)]'
+      className='fixed left-8 right-24 sm:left-0 sm:right-0 z-[600] mx-auto max-w-[680px] sm:max-w-[820px] overflow-hidden rounded-[9999px] border bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border-white/5 dark:border-white/5 shadow-[0_12px_36px_rgba(0,0,0,0.05)]'
       style={{
         bottom: '12px',
         paddingBottom: 'env(safe-area-inset-bottom)',
@@ -84,39 +83,44 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
         WebkitBackdropFilter: 'blur(18px)',
       }}
     >
-      <ul className='flex items-center justify-around w-full px-3'>
-        {navItems.map((item) => {
-          const active = isActive(item.href);
-          return (
-            <li
-              key={item.href}
-              className='flex-1 min-w-[64px] sm:min-w-[88px]'
-            >
-              <Link
-                href={item.href}
-                className='flex flex-col items-center justify-center w-full h-12 gap-1 text-xs'
-              >
-                <item.icon
-                  className={`h-6 w-6 ${
-                    active
-                      ? 'text-green-600 dark:text-green-400'
-                      : 'text-gray-500 dark:text-gray-400'
-                  }`}
-                />
-                <span
-                  className={
-                    active
-                      ? 'text-green-600 dark:text-green-400'
-                      : 'text-gray-600 dark:text-gray-300'
-                  }
+      {/* 底栏主组与搜索单独按钮（移动端样式） */}
+      <div className='flex items-center justify-between w-full px-2 transform scale-90 sm:scale-100'>
+        {/* 主组：底栏内项目（不含搜索） */}
+        <ul className='flex flex-nowrap items-center justify-between w-full px-0'>
+          {navItems.map((item) => {
+              const active = isActive(item.href);
+              return (
+                <li
+                  key={item.href}
+                  className='basis-1/6 flex-shrink-0 sm:min-w-[88px]'
                 >
-                  {item.label}
-                </span>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
+                  <Link
+                    href={item.href}
+                    className='flex flex-col items-center justify-center w-full h-11 sm:h-12 gap-1 text-[11px] sm:text-xs'
+                  >
+                    <item.icon
+                      className={`h-5 w-5 sm:h-6 sm:w-6 ${
+                        active
+                          ? 'text-green-600 dark:text-green-400'
+                          : 'text-gray-500 dark:text-gray-400'
+                      }`}
+                    />
+                    <span
+                      className={
+                        active
+                          ? 'text-green-600 dark:text-green-400'
+                          : 'text-gray-600 dark:text-gray-300'
+                      }
+                      style={{ whiteSpace: 'nowrap' }}
+                    >
+                      {item.label}
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+        </ul>
+      </div>
     </nav>
   );
 };

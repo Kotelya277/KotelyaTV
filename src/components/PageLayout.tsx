@@ -1,5 +1,6 @@
 import { BackButton } from './BackButton';
 import MobileBottomNav from './MobileBottomNav';
+import FloatingSearchButton from './FloatingSearchButton';
 import MobileHeader from './MobileHeader';
 import { ThemeToggle } from './ThemeToggle';
 import { UserMenu } from './UserMenu';
@@ -56,6 +57,8 @@ const PageLayout = ({ children, activePath = '/' }: PageLayoutProps) => {
 
       {/* 底部导航（全端显示） */}
       <MobileBottomNav activePath={activePath} />
+      {/* 移动端右侧独立搜索按钮 */}
+      <FloatingSearchButton />
     </div>
   );
 };

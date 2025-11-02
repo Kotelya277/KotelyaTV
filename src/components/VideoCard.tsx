@@ -17,7 +17,6 @@ import { SearchResult } from '@/lib/types';
 import { processImageUrl } from '@/lib/utils';
 
 import { ImagePlaceholder } from '@/components/ImagePlaceholder';
-import GlassCard from '@/components/GlassCard';
 
 interface VideoCardProps {
   id?: string;
@@ -261,7 +260,7 @@ export default function VideoCard({
     return configs[from] || configs.search;
   }, [from, isAggregate, actualDoubanId, rate]);
 
-  const cardContent = (
+  return (
     <div
       className='group relative w-full rounded-lg bg-transparent cursor-pointer transition-all duration-300 ease-in-out hover:scale-[1.05] hover:z-[500]'
       onClick={handleClick}
@@ -371,7 +370,7 @@ export default function VideoCard({
 
       {/* 标题与来源（轻玻璃卡片） */}
       <div className='mt-2 text-center'>
-        <div className='inline-block px-3 py-2 rounded-[9999px] bg-white/25 dark:bg-zinc-900/25 backdrop-blur-xl border border-white/5 dark:border-white/5 shadow-[0_8px_24px_rgba(0,0,0,0.05)]'>
+        <div className='inline-block px-3 py-2 rounded-[9999px] bg-white/25 dark:bg-zinc-900/25 backdrop-blur-xl border border-white/5 dark:border-white/5 shadow-[0_8px_24px_rgba(0,0,0,0.05)] mx-1.5 max-w-[88%] mx-auto sm:mx-0 sm:max-w-none'>
         <div className='relative'>
           <span className='block text-sm font-semibold truncate text-gray-900 dark:text-gray-100 transition-colors duration-300 ease-in-out group-hover:text-green-600 dark:group-hover:text-green-400 peer'>
             {actualTitle}
@@ -393,15 +392,4 @@ export default function VideoCard({
       </div>
     </div>
   );
-
-  // 搜索结果整卡底板：使用超轻玻璃，不改变内部层级
-  if (from === 'search') {
-    return (
-      <GlassCard rounded='lg' intensity='ultra' className='p-2'>
-        {cardContent}
-      </GlassCard>
-    );
-  }
-
-  return cardContent;
 }
