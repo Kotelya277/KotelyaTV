@@ -74,7 +74,7 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
 
   return (
     <nav
-      className='fixed left-8 right-8 sm:left-0 sm:right-0 z-[600] mx-auto max-w-[680px] sm:max-w-[820px] overflow-hidden rounded-[9999px] border bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border-white/5 dark:border-white/5 shadow-[0_12px_36px_rgba(0,0,0,0.05)]'
+      className='fixed left-12 right-12 sm:left-0 sm:right-0 z-[600] mx-auto max-w-[760px] sm:max-w-[860px] overflow-hidden rounded-[9999px] border bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border-white/5 dark:border-white/5 shadow-[0_12px_36px_rgba(0,0,0,0.05)]'
       style={{
         bottom: '12px',
         paddingBottom: 'env(safe-area-inset-bottom)',
@@ -84,15 +84,15 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
       }}
     >
       {/* 底栏主组与搜索单独按钮（移动端样式） */}
-      <div className='flex items-center justify-between w-full px-1 sm:px-2 transform scale-90 sm:scale-100'>
+      <div className='flex items-center justify-between w-full px-0 sm:px-0'>
         {/* 主组：底栏内项目（不含搜索） */}
-        <ul className='flex flex-nowrap items-center justify-center w-full px-0 sm:gap-2'>
+        <ul className='flex flex-nowrap items-center justify-center w-full px-0 gap-1 sm:gap-2'>
           {navItems.map((item) => {
               const active = isActive(item.href);
               return (
                 <li
                   key={item.href}
-                  className='basis-1/6 flex-shrink-0 sm:min-w-[88px]'
+                  className='flex-shrink-0 min-w-[48px] sm:min-w-[64px]'
                 >
                   <Link
                     href={item.href}
