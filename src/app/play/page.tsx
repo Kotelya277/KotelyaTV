@@ -1914,7 +1914,7 @@ function PlayPageClient() {
               <div className='relative w-full h-[300px] lg:h-full'>
                 <div
                   ref={artRef}
-                  className='bg-black w-full h-full rounded-xl overflow-hidden shadow-lg'
+                  className='w-full h-full rounded-xl overflow-hidden shadow-[0_8px_24px_rgba(0,0,0,0.10)] bg-white/10 dark:bg-zinc-900/20 backdrop-blur-lg border border-white/10 dark:border-white/10'
                 ></div>
 
                 {/* 换源加载蒙层 */}
@@ -1987,7 +1987,7 @@ function PlayPageClient() {
         <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
           {/* 文字区 */}
           <div className='md:col-span-3'>
-            <GlassCard className='p-6 flex flex-col min-h-0' rounded='xl' intensity='normal'>
+            <GlassCard className='p-6 flex flex-col min-h-0' rounded='xl' intensity='ultra'>
               {/* 标题 */}
               <h1 className='text-3xl font-bold mb-2 tracking-wide flex items-center flex-shrink-0 text-center md:text-left w-full'>
                 {videoTitle || '影片标题'}
