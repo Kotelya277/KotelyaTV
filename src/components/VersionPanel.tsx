@@ -163,7 +163,7 @@ export const VersionPanel: React.FC<VersionPanelProps> = ({
         {/* 版本标题 */}
         <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3'>
           <div className='flex flex-wrap items-center gap-2'>
-            <h4 className='text-lg font-semibold text-gray-900 dark:text-gray-100'>
+            <h4 className='text-lg font-semibold text-gray-900 dark:text-gray-100 inline-block px-2 py-0.5 rounded-full bg-white/10 dark:bg-zinc-900/15 backdrop-blur-sm border border-white/10 dark:border-white/10'>
               v{entry.version}
             </h4>
             {isCurrentVersion && (
@@ -263,11 +263,11 @@ export const VersionPanel: React.FC<VersionPanelProps> = ({
         {/* 标题栏 */}
         <div className='flex items-center justify-between p-3 sm:p-6 border-b border-gray-200 dark:border-gray-700'>
           <div className='flex items-center gap-2 sm:gap-3'>
-            <h3 className='text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-200'>
+            <h3 className='text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-200 inline-block px-2 py-0.5 rounded-full bg-white/20 dark:bg-zinc-900/20 backdrop-blur-sm border border-white/10 dark:border-white/10'>
               版本信息
             </h3>
             <div className='flex flex-wrap items-center gap-1 sm:gap-2'>
-              <span className='px-2 sm:px-3 py-1 text-xs sm:text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 rounded-full'>
+              <span className='px-2 sm:px-3 py-1 text-xs sm:text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 rounded-full backdrop-blur-sm border border-white/10 dark:border-white/10'>
                 v{CURRENT_VERSION}
               </span>
               {hasUpdate && (
@@ -281,7 +281,7 @@ export const VersionPanel: React.FC<VersionPanelProps> = ({
           </div>
           <button
             onClick={onClose}
-            className='w-6 h-6 sm:w-8 sm:h-8 p-1 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors'
+            className='w-6 h-6 sm:w-8 sm:h-8 p-1 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors bg-white/20 dark:bg-zinc-900/20 backdrop-blur-sm border border-white/10 dark:border-white/10'
             aria-label='关闭'
           >
             <X className='w-full h-full' />
@@ -289,11 +289,17 @@ export const VersionPanel: React.FC<VersionPanelProps> = ({
         </div>
 
         {/* 内容区域 */}
-        <div className='p-3 sm:p-6 overflow-y-auto max-h-[calc(95vh-140px)] sm:max-h-[calc(90vh-120px)]'>
+        <div
+          className='
+            p-3 sm:p-6 overflow-y-auto max-h-[calc(95vh-140px)] sm:max-h-[calc(90vh-120px)]
+            rounded-xl bg-white/20 dark:bg-zinc-900/20 backdrop-blur-xl
+            border border-white/10 dark:border-white/10 shadow-[0_8px_24px_rgba(0,0,0,0.06)]
+          '
+        >
           <div className='space-y-3 sm:space-y-6'>
             {/* 远程更新信息 */}
             {hasUpdate && (
-              <div className='bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 sm:p-4'>
+              <div className='bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 sm:p-4 backdrop-blur-xl shadow-[0_8px_24px_rgba(0,0,0,0.06)]'>
                 <div className='flex flex-col gap-3'>
                   <div className='flex items-center gap-2 sm:gap-3'>
                     <div className='w-8 h-8 sm:w-10 sm:h-10 bg-yellow-100 dark:bg-yellow-800/40 rounded-full flex items-center justify-center flex-shrink-0'>
@@ -312,7 +318,7 @@ export const VersionPanel: React.FC<VersionPanelProps> = ({
                     href='https://github.com/Kotelya277/KotelyaTV/tree/main'
                     target='_blank'
                     rel='noopener noreferrer'
-                    className='inline-flex items-center justify-center gap-2 px-3 py-2 bg-yellow-600 hover:bg-yellow-700 text-white text-xs sm:text-sm rounded-lg transition-colors shadow-sm w-full'
+                    className='inline-flex items-center justify-center gap-2 px-3 py-2 bg-yellow-600 hover:bg-yellow-700 text-white text-xs sm:text-sm rounded-lg transition-colors shadow-sm w-full backdrop-blur-sm border border-white/10 dark:border-white/10'
                   >
                     <Download className='w-3 h-3 sm:w-4 sm:h-4' />
                     前往仓库
@@ -323,7 +329,7 @@ export const VersionPanel: React.FC<VersionPanelProps> = ({
 
             {/* 当前为最新版本信息 */}
             {!hasUpdate && (
-              <div className='bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 sm:p-4'>
+              <div className='bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 sm:p-4 backdrop-blur-xl shadow-[0_8px_24px_rgba(0,0,0,0.06)]'>
                 <div className='flex flex-col gap-3'>
                   <div className='flex items-center gap-2 sm:gap-3'>
                     <div className='w-8 h-8 sm:w-10 sm:h-10 bg-green-100 dark:bg-green-800/40 rounded-full flex items-center justify-center flex-shrink-0'>
@@ -342,7 +348,7 @@ export const VersionPanel: React.FC<VersionPanelProps> = ({
                     href='https://github.com/Kotelya277/KotelyaTV/tree/main'
                     target='_blank'
                     rel='noopener noreferrer'
-                    className='inline-flex items-center justify-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-xs sm:text-sm rounded-lg transition-colors shadow-sm w-full'
+                    className='inline-flex items-center justify-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-xs sm:text-sm rounded-lg transition-colors shadow-sm w-full backdrop-blur-sm border border-white/10 dark:border-white/10'
                   >
                     <CheckCircle className='w-3 h-3 sm:w-4 sm:h-4' />
                     前往仓库
@@ -398,9 +404,9 @@ export const VersionPanel: React.FC<VersionPanelProps> = ({
                         >
                           <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3'>
                             <div className='flex flex-wrap items-center gap-2'>
-                              <h4 className='text-lg font-semibold text-gray-900 dark:text-gray-100'>
-                                v{entry.version}
-                              </h4>
+            <h4 className='text-lg font-semibold text-gray-900 dark:text-gray-100 inline-block px-2 py-0.5 rounded-full bg-white/10 dark:bg-zinc-900/15 backdrop-blur-sm border border-white/10 dark:border-white/10'>
+              v{entry.version}
+            </h4>
                               {entry.version === latestVersion && (
                                 <span className='px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 rounded-full flex items-center gap-1'>
                                   远程最新
@@ -479,10 +485,10 @@ export const VersionPanel: React.FC<VersionPanelProps> = ({
             )}
 
             {/* 变更日志标题 */}
-            <div className='border-b border-gray-200 dark:border-gray-700 pb-4'>
-              <h4 className='text-lg font-semibold text-gray-800 dark:text-gray-200 pb-3 sm:pb-4'>
-                变更日志
-              </h4>
+          <div className='border-b border-gray-200 dark:border-gray-700 pb-4'>
+            <h4 className='text-lg font-semibold text-gray-800 dark:text-gray-200 pb-3 sm:pb-4 inline-block px-2 py-1 rounded-full bg-white/10 dark:bg-zinc-900/15 backdrop-blur-sm border border-white/10 dark:border-white/10'>
+              变更日志
+            </h4>
 
               <div className='space-y-4'>
                 {/* 本地变更日志 */}
