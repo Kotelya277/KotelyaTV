@@ -1692,7 +1692,7 @@ function PlayPageClient() {
                   {loadingStage === 'ready' && '✨'}
                 </div>
                 {/* 旋转光环 */}
-                <div className='absolute -inset-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl opacity-20 animate-spin'></div>
+                <div className='absolute -inset-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl opacity-20 animate-spin backdrop-blur-md border border-white/10 dark:border-white/10 shadow-[0_8px_24px_rgba(0,0,0,0.06)]'></div>
               </div>
 
               {/* 浮动粒子效果 */}
@@ -1863,7 +1863,10 @@ function PlayPageClient() {
               onClick={() =>
                 setIsEpisodeSelectorCollapsed(!isEpisodeSelectorCollapsed)
               }
-              className='group relative flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-white/80 hover:bg-white dark:bg-gray-800/80 dark:hover:bg-gray-800 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 shadow-sm hover:shadow-md transition-all duration-200'
+              className='group relative flex items-center space-x-1.5 px-3 py-1.5 rounded-full 
+              bg-white/25 dark:bg-zinc-900/20 hover:bg-white/35 dark:hover:bg-zinc-900/25 
+              backdrop-blur-xl border border-white/8 dark:border-white/8 
+              shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:shadow-md transition-all duration-200'
               title={
                 isEpisodeSelectorCollapsed ? '显示选集面板' : '隐藏选集面板'
               }
@@ -1917,6 +1920,23 @@ function PlayPageClient() {
                   className='w-full h-full rounded-xl overflow-hidden shadow-[0_8px_24px_rgba(0,0,0,0.10)] bg-white/10 dark:bg-zinc-900/20 backdrop-blur-lg border border-white/10 dark:border-white/10'
                 ></div>
 
+                {/* 右上角品牌标识 */}
+                <div className='pointer-events-none absolute top-2 right-2 z-[600]'>
+                  <div
+                    className='
+                      inline-flex items-center justify-center px-3 py-1
+                      text-xs sm:text-sm font-bold
+                      bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 bg-clip-text text-transparent
+                      bg-white/25 dark:bg-zinc-900/20
+                      backdrop-blur-xl border border-white/8 dark:border-white/8
+                      rounded-[9999px]
+                      shadow-[0_8px_24px_rgba(0,0,0,0.06)]
+                    '
+                  >
+                    KotelyaTV
+                  </div>
+                </div>
+
                 {/* 换源加载蒙层 */}
                 {isVideoLoading && (
                   <div className='absolute inset-0 bg-black/85 backdrop-blur-sm rounded-xl flex items-center justify-center z-[500] transition-all duration-300'>
@@ -1926,7 +1946,7 @@ function PlayPageClient() {
                         <div className='relative mx-auto w-24 h-24 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl shadow-2xl flex items-center justify-center transform hover:scale-105 transition-transform duration-300'>
                           <div className='text-white text-4xl'>🎬</div>
                           {/* 旋转光环 */}
-                          <div className='absolute -inset-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl opacity-20 animate-spin'></div>
+                          <div className='absolute -inset-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl opacity-20 animate-spin backdrop-blur-md border border-white/10 dark:border-white/10 shadow-[0_8px_24px_rgba(0,0,0,0.06)]'></div>
                         </div>
 
                         {/* 浮动粒子效果 */}

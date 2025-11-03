@@ -33,12 +33,7 @@ body {
 
 html:not(.dark) body {
   /* 三色渐变：#DCFFFD（清浅青）→ #E7DFFF（浅紫） → #FFE7DF（浅桃） */
-  background: linear-gradient(
-    180deg,
-    #DCFFFD 0%,
-    #E7DFFF 50%,
-    #FFE7DF 100%
-  );
+  background: linear-gradient(180deg, #dcfffd 0%, #e7dfff 50%, #ffe7df 100%);
   background-attachment: fixed;
 }
 
@@ -51,12 +46,7 @@ html:not(.dark) body {
 
 html.dark body {
   /* 深色模式：柔和近黑渐变（不太黑） */
-  background: linear-gradient(
-    180deg,
-    #101214 0%,
-    #15171C 60%,
-    #1B1F26 100%
-  );
+  background: linear-gradient(180deg, #101214 0%, #15171c 60%, #1b1f26 100%);
   background-attachment: fixed;
 }
 
@@ -259,7 +249,7 @@ html.dark .art-progress {
 /* 按钮图标玻璃标签 */
 .art-icon {
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   border: 1px solid rgba(255, 255, 255, 0.18);

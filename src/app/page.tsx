@@ -197,7 +197,7 @@ function HomeClient() {
           <GreetingBanner />
         </div>
         {/* 顶部品牌（液态玻璃、超大圆角） */}
-        <div className='mb-4 flex justify-center'>
+        <div className='mb-4 -mt-3 flex justify-center'>
           <BrandPill />
         </div>
 
@@ -268,7 +268,7 @@ function HomeClient() {
                   </GlassCard>
                   <Link
                     href='/douban?type=movie'
-                    className='flex items-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                    className='flex items-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 px-2 py-1 rounded-full bg-white/15 dark:bg-zinc-900/15 backdrop-blur-sm border border-white/10 dark:border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.08)]'
                   >
                     查看更多
                     <ChevronRight className='w-4 h-4 ml-1' />
@@ -318,7 +318,7 @@ function HomeClient() {
                   </GlassCard>
                   <Link
                     href='/douban?type=tv'
-                    className='flex items-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                    className='flex items-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 px-2 py-1 rounded-full bg-white/15 dark:bg-zinc-900/15 backdrop-blur-sm border border-white/10 dark:border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.08)]'
                   >
                     查看更多
                     <ChevronRight className='w-4 h-4 ml-1' />
@@ -367,7 +367,7 @@ function HomeClient() {
                   </GlassCard>
                   <Link
                     href='/douban?type=show'
-                    className='flex items-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                    className='flex items-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 px-2 py-1 rounded-full bg-white/15 dark:bg-zinc-900/15 backdrop-blur-sm border border-white/10 dark:border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.08)]'
                   >
                     查看更多
                     <ChevronRight className='w-4 h-4 ml-1' />
@@ -415,8 +415,8 @@ function HomeClient() {
                     </h2>
                   </GlassCard>
                   <Link
-                    href='/douban?type=tv&label=动画'
-                    className='flex items-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                    href='/douban?type=anime'
+                    className='flex items-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 px-2 py-1 rounded-full bg-white/15 dark:bg-zinc-900/15 backdrop-blur-sm border border-white/10 dark:border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.08)]'
                   >
                     查看更多
                     <ChevronRight className='w-4 h-4 ml-1' />

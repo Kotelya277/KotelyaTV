@@ -88,13 +88,13 @@ export default function ContinueWatching({ className }: ContinueWatchingProps) {
 
   return (
     <section className={`mb-8 ${className || ''}`}>
-      <div className='mb-4 flex items-center justify-between'>
+      <GlassCard className='mb-4 flex items-center justify-between px-4 py-1.5' rounded='pill' intensity='light'>
         <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200'>
           继续观看
         </h2>
         {!loading && playRecords.length > 0 && (
           <button
-            className='text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+            className='text-sm text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100'
             onClick={async () => {
               await clearAllPlayRecords();
               setPlayRecords([]);
@@ -103,7 +103,7 @@ export default function ContinueWatching({ className }: ContinueWatchingProps) {
             清空
           </button>
         )}
-      </div>
+      </GlassCard>
       <ScrollableRow>
         {loading
           ? // 加载状态显示灰色占位数据

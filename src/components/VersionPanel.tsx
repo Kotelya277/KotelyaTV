@@ -195,7 +195,7 @@ export const VersionPanel: React.FC<VersionPanelProps> = ({
                 {entry.added.map((item, index) => (
                   <li
                     key={index}
-                    className='text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2'
+                    className='text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2 rounded-lg px-2 py-1.5 bg-white/10 dark:bg-zinc-900/15 backdrop-blur-sm border border-white/10 dark:border-white/10'
                   >
                     <span className='w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0'></span>
                     {item}
@@ -215,7 +215,7 @@ export const VersionPanel: React.FC<VersionPanelProps> = ({
                 {entry.changed.map((item, index) => (
                   <li
                     key={index}
-                    className='text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2'
+                    className='text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2 rounded-lg px-2 py-1.5 bg-white/10 dark:bg-zinc-900/15 backdrop-blur-sm border border-white/10 dark:border-white/10'
                   >
                     <span className='w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0'></span>
                     {item}
@@ -235,7 +235,7 @@ export const VersionPanel: React.FC<VersionPanelProps> = ({
                 {entry.fixed.map((item, index) => (
                   <li
                     key={index}
-                    className='text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2'
+                    className='text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2 rounded-lg px-2 py-1.5 bg-white/10 dark:bg-zinc-900/15 backdrop-blur-sm border border-white/10 dark:border-white/10'
                   >
                     <span className='w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 flex-shrink-0'></span>
                     {item}

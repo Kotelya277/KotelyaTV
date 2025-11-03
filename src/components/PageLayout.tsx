@@ -55,7 +55,7 @@ const PageLayout = ({ children, activePath = '/' }: PageLayoutProps) => {
         </div>
       </div>
 
-      {/* 底部导航（全端显示） */}
+      {/* 底部导航：恢复全端统一样式 */}
       <MobileBottomNav activePath={activePath} />
       {/* 移动端右侧独立搜索按钮 */}
       <FloatingSearchButton />
