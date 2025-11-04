@@ -3,7 +3,8 @@
 'use client';
 
 import Artplayer from 'artplayer';
-import artplayerPluginDanmuku from 'artplayer-plugin-danmuku';
+// 动态加载弹幕插件以避免服务端渲染阶段报错
+// import artplayerPluginDanmuku from 'artplayer-plugin-danmuku';
 import Hls from 'hls.js';
 import { Heart } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -183,6 +184,22 @@ function PlayPageClient() {
     }
     return true;
   });
+
+  // 动态加载弹幕插件
+  const [DanmukuPlugin, setDanmukuPlugin] = useState<any>(null);
+  useEffect(() => {
+    let mounted = true;
+    import('artplayer-plugin-danmuku')
+      .then((mod) => {
+        if (mounted) setDanmukuPlugin(mod.default);
+      })
+      .catch(() => {
+        // ignore
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   // 弹幕输入微型 overlay 状态
   const [showDanmakuOverlay, setShowDanmakuOverlay] = useState(false);
@@ -1273,6 +1290,7 @@ function PlayPageClient() {
       !videoUrl ||
       loading ||
       currentEpisodeIndex === null ||
+      !DanmukuPlugin ||
       !artRef.current
     ) {
       return;
@@ -1362,7 +1380,7 @@ function PlayPageClient() {
         },
         // 弹幕插件
         plugins: [
-          artplayerPluginDanmuku({
+          DanmukuPlugin({
             danmuku: () => Promise.resolve([
               { text: '欢迎来到 KotelyaTV', time: 1, color: '#22c55e', border: true },
               { text: '弹幕测试', time: 3 },
@@ -2170,12 +2188,9 @@ function PlayPageClient() {
           </div>
         </div>
 
-        {/* 播放页欢迎横幅 */}
+        {/* 播放页欢迎横幅（时间问候 + 用户名） */}
         <div className='mb-4 flex justify-center md:justify-start'>
-          <div className='inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-indigo-500 via-sky-500 to-purple-500 text-white shadow-[0_12px_36px_rgba(0,0,0,0.08)] border border-white/10 backdrop-blur-xl'>
-            <span className='font-semibold'>祝你观影愉快，游客</span>
-            <span className='opacity-90'>🎬 右侧可换源，点击 i 发送弹幕</span>
-          </div>
+          <GreetingBanner subtitle='🎬 右侧可换源，点击 i 发送弹幕' />
         </div>
 
         {/* 详情展示 */}

@@ -2,7 +2,7 @@
 
 import { getAuthInfoFromBrowserCookie } from "@/lib/auth";
 
-export default function GreetingBanner() {
+export default function GreetingBanner({ subtitle }: { subtitle?: string }) {
   const auth = getAuthInfoFromBrowserCookie();
   const username = auth?.username || "游客";
 
@@ -32,7 +32,7 @@ export default function GreetingBanner() {
       <span className="font-semibold">
         {timeGreeting}，{username}
       </span>
-      <span className="opacity-90">👋 发现更多精彩视频内容 ✨</span>
+      <span className="opacity-90">{subtitle ?? "👋 发现更多精彩视频内容 ✨"}</span>
     </div>
   );
 }
