@@ -7,6 +7,7 @@ export function BackButton() {
       className='
         w-10 h-10 p-2 rounded-[9999px]
         flex items-center justify-center
+        ml-2
         text-gray-700 dark:text-gray-200
         bg-white/40 dark:bg-zinc-900/40
         backdrop-blur-xl

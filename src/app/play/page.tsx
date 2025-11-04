@@ -3,6 +3,7 @@
 'use client';
 
 import Artplayer from 'artplayer';
+import artplayerPluginDanmuku from 'artplayer-plugin-danmuku';
 import Hls from 'hls.js';
 import { Heart } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -182,6 +183,40 @@ function PlayPageClient() {
     }
     return true;
   });
+
+  // 弹幕输入微型 overlay 状态
+  const [showDanmakuOverlay, setShowDanmakuOverlay] = useState(false);
+  const [danmakuText, setDanmakuText] = useState('');
+  const [danmakuColor, setDanmakuColor] = useState<string>('#22c55e');
+  const danmakuPresetColors = ['#22c55e', '#16a34a', '#3b82f6', '#ef4444', '#f59e0b', '#a855f7'];
+
+  const emitDanmaku = () => {
+    const text = danmakuText.trim();
+    if (!text) return;
+    (artPlayerRef.current as any)?.plugins?.artplayerPluginDanmuku?.emit({
+      text,
+      color: danmakuColor,
+      border: true,
+    });
+    // 同步到后端，供其他用户拉取
+    try {
+      fetch('/api/danmaku', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: currentSource,
+          id: currentId,
+          episode: (currentEpisodeIndex + 1).toString(),
+          text,
+          color: danmakuColor,
+        }),
+      });
+    } catch (_) {
+      /* ignore */
+    }
+    setShowDanmakuOverlay(false);
+    setDanmakuText('');
+  };
 
   // 保存优选时的测速结果，避免EpisodeSelector重复测速
   const [precomputedVideoInfo, setPrecomputedVideoInfo] = useState<
@@ -1325,6 +1360,22 @@ function PlayPageClient() {
         moreVideoAttr: {
           crossOrigin: 'anonymous',
         },
+        // 弹幕插件
+        plugins: [
+          artplayerPluginDanmuku({
+            danmuku: () => Promise.resolve([
+              { text: '欢迎来到 KotelyaTV', time: 1, color: '#22c55e', border: true },
+              { text: '弹幕测试', time: 3 },
+            ]),
+            speed: 5,
+            opacity: 0.9,
+            fontSize: 18,
+            antiOverlap: true,
+            margin: [8, '25%'],
+            synchronousPlayback: true,
+            emitter: false,
+          }),
+        ],
         // HLS 支持配置
         customType: {
           m3u8: function (video: HTMLVideoElement, url: string) {
@@ -1384,6 +1435,21 @@ function PlayPageClient() {
             '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDUwIDUwIj48cGF0aCBkPSJNMjUuMjUxIDYuNDYxYy0xMC4zMTggMC0xOC42ODMgOC4zNjUtMTguNjgzIDE4LjY4M2g0LjA2OGMwLTguMDcgNi41NDUtMTQuNjE1IDE0LjYxNS0xNC42MTVWNi40NjF6IiBmaWxsPSIjMDA5Njg4Ij48YW5pbWF0ZVRyYW5zZm9ybSBhdHRyaWJ1dGVOYW1lPSJ0cmFuc2Zvcm0iIGF0dHJpYnV0ZVR5cGU9IlhNTCIgZHVyPSIxcyIgZnJvbT0iMCAyNSAyNSIgcmVwZWF0Q291bnQ9ImluZGVmaW5pdGUiIHRvPSIzNjAgMjUgMjUiIHR5cGU9InJvdGF0ZSIvPjwvcGF0aD48L3N2Zz4=">',
         },
         settings: [
+          {
+            html: '弹幕开关',
+            tooltip: '显示/隐藏弹幕',
+            onClick() {
+              const plugin = (artPlayerRef.current as any)?.plugins?.artplayerPluginDanmuku;
+              if (!plugin) return '';
+              if (plugin.visible) {
+                plugin.hide();
+                return '已隐藏';
+              } else {
+                plugin.show();
+                return '已显示';
+              }
+            },
+          },
           {
             html: '去广告',
             icon: '<text x="50%" y="50%" font-size="20" font-weight="bold" text-anchor="middle" dominant-baseline="middle" fill="#ffffff">AD</text>',
@@ -1490,12 +1556,54 @@ function PlayPageClient() {
               handleNextEpisode();
             },
           },
+          {
+            position: 'right',
+            index: 21,
+            html: '<i class="art-icon flex"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M2 3h20v14H6l-4 4V3z"/></svg></i>',
+            tooltip: '发送弹幕',
+            click: () => {
+              setShowDanmakuOverlay(true);
+            },
+          },
         ],
       });
 
       // 监听播放器事件
       artPlayerRef.current.on('ready', () => {
         setError(null);
+
+        // 启动周期拉取弹幕（每 10s），确保跨用户可见
+        const fetchDanmaku = async () => {
+          try {
+            const resp = await fetch(
+              `/api/danmaku?source=${encodeURIComponent(currentSource || '')}&id=${encodeURIComponent(currentId || '')}&episode=${encodeURIComponent((currentEpisodeIndex + 1).toString())}`
+            );
+            const data = await resp.json();
+            const list = Array.isArray(data?.danmuku) ? data.danmuku : [];
+            for (const d of list) {
+              // 简单去重：基于文本+时间+颜色
+              const key = `${d.text}|${d.time ?? ''}|${d.color ?? ''}`;
+              // @ts-ignore
+              if (!artPlayerRef.current.__danmakuSet) {
+                // @ts-ignore
+                artPlayerRef.current.__danmakuSet = new Set<string>();
+              }
+              // @ts-ignore
+              if (!artPlayerRef.current.__danmakuSet.has(key)) {
+                (artPlayerRef.current as any)?.plugins?.artplayerPluginDanmuku?.emit(d);
+                // @ts-ignore
+                artPlayerRef.current.__danmakuSet.add(key);
+              }
+            }
+          } catch (_) {
+            /* ignore */
+          }
+        };
+        // 立即拉取一次
+        fetchDanmaku();
+        // 定时拉取
+        const timerId = setInterval(fetchDanmaku, 10000);
+        artPlayerRef.current.on('destroy', () => clearInterval(timerId));
 
         // 播放器就绪后，如果正在播放则请求 Wake Lock
         if (artPlayerRef.current && !artPlayerRef.current.paused) {
@@ -1915,10 +2023,69 @@ function PlayPageClient() {
               }`}
             >
               <div className='relative w-full h-[300px] lg:h-full'>
-                <div
-                  ref={artRef}
-                  className='w-full h-full rounded-xl overflow-hidden shadow-[0_8px_24px_rgba(0,0,0,0.10)] bg-white/10 dark:bg-zinc-900/20 backdrop-blur-lg border border-white/10 dark:border-white/10'
-                ></div>
+              <div
+                ref={artRef}
+                className='w-full h-full rounded-xl overflow-hidden shadow-[0_8px_24px_rgba(0,0,0,0.10)] bg-white/10 dark:bg-zinc-900/20 backdrop-blur-lg border border-white/10 dark:border-white/10'
+              ></div>
+
+                {/* 弹幕输入微型 Overlay */}
+                {showDanmakuOverlay && (
+                  <div className='absolute inset-0 z-[700] flex items-start justify-end p-3' onClick={() => setShowDanmakuOverlay(false)}>
+                    <div
+                      className='
+                        rounded-xl bg-white/25 dark:bg-zinc-900/25 backdrop-blur-xl
+                        border border-white/10 dark:border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.08)]
+                        w-full max-w-[280px] p-3 space-y-2
+                      '
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div className='text-sm font-semibold text-gray-700 dark:text-gray-200'>发送弹幕</div>
+                      <input
+                        type='text'
+                        value={danmakuText}
+                        onChange={(e) => setDanmakuText(e.target.value)}
+                        placeholder='输入弹幕文本...'
+                        className='
+                          w-full px-3 py-2 rounded-lg
+                          bg-white/40 dark:bg-zinc-900/30 backdrop-blur-md
+                          border border-white/10 dark:border-white/10
+                          text-sm text-gray-800 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-500
+                          focus:outline-none focus:ring-2 focus:ring-green-400
+                        '
+                      />
+                      <div className='flex items-center justify-between'>
+                        <div className='flex items-center gap-2'>
+                          {danmakuPresetColors.map((c) => (
+                            <button
+                              key={c}
+                              type='button'
+                              onClick={() => setDanmakuColor(c)}
+                              className={`w-5 h-5 rounded-full border ${danmakuColor === c ? 'ring-2 ring-white/60' : ''}`}
+                              style={{ backgroundColor: c, borderColor: 'rgba(255,255,255,0.35)' }}
+                              aria-label={`选择颜色 ${c}`}
+                            />
+                          ))}
+                        </div>
+                        <div className='flex items-center gap-2'>
+                          <button
+                            type='button'
+                            onClick={() => setShowDanmakuOverlay(false)}
+                            className='px-2 py-1 text-xs rounded-full bg-white/30 dark:bg-zinc-900/25 border border-white/10 dark:border-white/10 text-gray-700 dark:text-gray-200'
+                          >
+                            取消
+                          </button>
+                          <button
+                            type='button'
+                            onClick={emitDanmaku}
+                            className='px-2 py-1 text-xs rounded-full bg-green-500/90 hover:bg-green-500 text-white'
+                          >
+                            发送
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* 右上角品牌标识 */}
                 <div className='pointer-events-none absolute top-2 right-2 z-[600]'>
@@ -2010,7 +2177,9 @@ function PlayPageClient() {
             <GlassCard className='p-6 flex flex-col min-h-0' rounded='xl' intensity='ultra'>
               {/* 标题 */}
               <h1 className='text-3xl font-bold mb-2 tracking-wide flex items-center flex-shrink-0 text-center md:text-left w-full'>
-                {videoTitle || '影片标题'}
+                <span className='inline-block px-2 py-1 rounded-full bg-white/15 dark:bg-zinc-900/15 backdrop-blur-sm border border-white/10 dark:border-white/10'>
+                  {videoTitle || '影片标题'}
+                </span>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -2025,24 +2194,30 @@ function PlayPageClient() {
               {/* 关键信息行 */}
               <div className='flex flex-wrap items-center gap-3 text-base mb-4 opacity-80 flex-shrink-0'>
                 {detail?.class && (
-                  <span className='text-green-600 font-semibold'>
+                  <span className='text-green-600 font-semibold px-2 py-0.5 rounded-full bg-white/10 dark:bg-zinc-900/12 backdrop-blur-sm border border-white/10 dark:border-white/10'>
                     {detail.class}
                   </span>
                 )}
                 {(detail?.year || videoYear) && (
-                  <span>{detail?.year || videoYear}</span>
+                  <span className='px-2 py-0.5 rounded-full bg-white/10 dark:bg-zinc-900/12 backdrop-blur-sm border border-white/10 dark:border-white/10'>
+                    {detail?.year || videoYear}
+                  </span>
                 )}
                 {detail?.source_name && (
-                  <span className='border border-gray-500/60 px-2 py-[1px] rounded'>
+                  <span className='px-2 py-0.5 rounded-full bg-white/10 dark:bg-zinc-900/12 backdrop-blur-sm border border-white/10 dark:border-white/10'>
                     {detail.source_name}
                   </span>
                 )}
-                {detail?.type_name && <span>{detail.type_name}</span>}
+                {detail?.type_name && (
+                  <span className='px-2 py-0.5 rounded-full bg-white/10 dark:bg-zinc-900/12 backdrop-blur-sm border border-white/10 dark:border-white/10'>
+                    {detail.type_name}
+                  </span>
+                )}
               </div>
               {/* 剧情简介 */}
               {detail?.desc && (
                 <div
-                  className='mt-0 text-base leading-relaxed opacity-90 overflow-y-auto pr-2 flex-1 min-h-0 scrollbar-hide'
+                  className='mt-0 text-base leading-relaxed opacity-90 overflow-y-auto pr-2 flex-1 min-h-0 scrollbar-hide rounded-lg px-3 py-2 bg-white/10 dark:bg-zinc-900/12 backdrop-blur-sm border border-white/8 dark:border-white/8'
                   style={{ whiteSpace: 'pre-line' }}
                 >
                   {detail.desc}
