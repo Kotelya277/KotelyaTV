@@ -3,6 +3,7 @@
 'use client';
 
 import Artplayer from 'artplayer';
+import { getAuthInfoFromBrowserCookie } from '@/lib/auth';
 // 动态加载弹幕插件以避免服务端渲染阶段报错
 // import artplayerPluginDanmuku from 'artplayer-plugin-danmuku';
 import Hls from 'hls.js';
@@ -49,6 +50,7 @@ interface WakeLockSentinel {
 function PlayPageClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const username = getAuthInfoFromBrowserCookie()?.username || '游客';
 
   // -----------------------------------------------------------------------------
   // 状态变量（State）
@@ -2188,9 +2190,12 @@ function PlayPageClient() {
           </div>
         </div>
 
-        {/* 播放页欢迎横幅（时间问候 + 用户名） */}
+        {/* 播放页欢迎横幅 */}
         <div className='mb-4 flex justify-center md:justify-start'>
-          <GreetingBanner subtitle='🎬 右侧可换源，点击 i 发送弹幕' />
+          <div className='inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-indigo-500 via-sky-500 to-purple-500 text-white shadow-[0_12px_36px_rgba(0,0,0,0.08)] border border-white/10 backdrop-blur-xl'>
+            <span className='font-semibold'>祝你观影愉快，{username}</span>
+            <span className='opacity-90'>🎬 右侧可换源，点击 i 发送弹幕</span>
+          </div>
         </div>
 
         {/* 详情展示 */}
