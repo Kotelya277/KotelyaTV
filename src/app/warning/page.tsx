@@ -1,8 +1,9 @@
 import { Metadata } from 'next';
+
 import BrandPill from '@/components/BrandPill';
 
 export const metadata: Metadata = {
-  title: '安全警告 - KotelyaTV',
+  title: '安全警告 - KodakTV',
   description: '站点安全配置警告',
 };
 

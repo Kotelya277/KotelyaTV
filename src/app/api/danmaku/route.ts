@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextRequest } from 'next/server';
 import { Redis } from '@upstash/redis';
+import { NextRequest } from 'next/server';
 
 // Simple in-memory fallback when Upstash is not configured
 const memoryStore = new Map<string, any[]>();

@@ -20,7 +20,7 @@ export default function BrandPill({ className = "" }: BrandPillProps) {
         ${className}
       `}
     >
-      KotelyaTV
+      KodakTV
     </div>
   );
 }

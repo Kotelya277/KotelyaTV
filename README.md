@@ -1,10 +1,10 @@
-# KotelyaTV
+# KodakTV
 
 <div align="center">
-  <img src="public/logo.png" alt="KotelyaTV Logo" width="120">
+  <img src="public/logo.png" alt="KodakTV Logo" width="120">
 </div>
 
-> 🎬 **KotelyaTV** 是一个开箱即用的、跨平台的影视聚合播放器。它基于 **Next.js 14** + **Tailwind&nbsp;CSS** + **TypeScript** 构建，支持多资源搜索、在线播放、收藏同步、播放记录、本地/云端存储，让你可以随时随地畅享海量免费影视内容。
+> 🎬 **KodakTV** 是一个开箱即用的、跨平台的影视聚合播放器。它基于 **Next.js 14** + **Tailwind&nbsp;CSS** + **TypeScript** 构建，支持多资源搜索、在线播放、收藏同步、播放记录、本地/云端存储，让你可以随时随地畅享海量免费影视内容。
 
 <div align="center">
 
@@ -51,7 +51,7 @@
 - 安装依赖：`pnpm install`（或 `npm install` / `yarn`）
 - 启动开发：`pnpm dev`，访问 `http://localhost:3000/`
 - 可选环境变量：
-  - `NEXT_PUBLIC_SITE_NAME` 设置站点名（默认 `KotelyaTV`）
+- `NEXT_PUBLIC_SITE_NAME` 设置站点名（默认 `KodakTV`）
   - `PASSWORD` 设置管理密码（非 localstorage 部署建议设置）
   - 豆瓣代理配置见下文“环境变量”与“配置说明”
 
@@ -59,7 +59,7 @@
 
 ```bash
 docker pull ghcr.io/lunatechlab/moontv:latest
-docker run -d --name kotelyatv -p 3000:3000 \
+docker run -d --name kodaktv -p 3000:3000 \
   -e PASSWORD=your_password ghcr.io/lunatechlab/moontv:latest
 ```
 

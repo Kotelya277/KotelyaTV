@@ -1,10 +1,10 @@
-# KotelyaTV
+# KodakTV
 
 <div align="center">
-  <img src="public/logo.png" alt="KotelyaTV Logo" width="120" />
+  <img src="public/logo.png" alt="KodakTV Logo" width="120" />
 </div>
 
-> KotelyaTV is a cross‑platform, ready‑to‑run video aggregation player built with Next.js 14, Tailwind CSS, and TypeScript. It supports multi‑source search, in‑browser playback, favorites/progress sync, and both local or cloud storage.
+> KodakTV is a cross‑platform, ready‑to‑run video aggregation player built with Next.js 14, Tailwind CSS, and TypeScript. It supports multi‑source search, in‑browser playback, favorites/progress sync, and both local or cloud storage.
 
 ---
 
@@ -27,14 +27,14 @@
 - Open: `http://localhost:3000/` (or fallback port if busy)
 
 Optional envs:
-- `NEXT_PUBLIC_SITE_NAME` – site name (default: KotelyaTV)
+- `NEXT_PUBLIC_SITE_NAME` – site name (default: KodakTV)
 - `PASSWORD` – admin password (recommended when not using localstorage)
 
 ### One‑command Docker
 
 ```bash
 docker pull ghcr.io/lunatechlab/moontv:latest
-docker run -d --name kotelyatv -p 3000:3000 \
+docker run -d --name kodaktv -p 3000:3000 \
   -e PASSWORD=your_password ghcr.io/lunatechlab/moontv:latest
 ```
 

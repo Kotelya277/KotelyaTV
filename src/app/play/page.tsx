@@ -2,11 +2,7 @@
 
 'use client';
 
-import Artplayer from 'artplayer';
-import { getAuthInfoFromBrowserCookie } from '@/lib/auth';
-// 动态加载弹幕插件以避免服务端渲染阶段报错
-// import artplayerPluginDanmuku from 'artplayer-plugin-danmuku';
-import Hls from 'hls.js';
+// Artplayer/Hls/弹幕插件改为在客户端动态导入，避免 SSR 阶段加载
 import { Heart } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useRef, useState } from 'react';
@@ -27,10 +23,10 @@ import {
 import { SearchResult } from '@/lib/types';
 import { getVideoResolutionFromM3u8, processImageUrl } from '@/lib/utils';
 
-import EpisodeSelector from '@/components/EpisodeSelector';
-import PageLayout from '@/components/PageLayout';
 import BrandPill from '@/components/BrandPill';
+import EpisodeSelector from '@/components/EpisodeSelector';
 import GlassCard from '@/components/GlassCard';
+import PageLayout from '@/components/PageLayout';
 
 // 扩展 HTMLVideoElement 类型以支持 hls 属性
 declare global {
@@ -50,7 +46,6 @@ interface WakeLockSentinel {
 function PlayPageClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const username = getAuthInfoFromBrowserCookie()?.username || '游客';
 
   // -----------------------------------------------------------------------------
   // 状态变量（State）
@@ -187,22 +182,6 @@ function PlayPageClient() {
     return true;
   });
 
-  // 动态加载弹幕插件
-  const [DanmukuPlugin, setDanmukuPlugin] = useState<any>(null);
-  useEffect(() => {
-    let mounted = true;
-    import('artplayer-plugin-danmuku')
-      .then((mod) => {
-        if (mounted) setDanmukuPlugin(mod.default);
-      })
-      .catch(() => {
-        // ignore
-      });
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
   // 弹幕输入微型 overlay 状态
   const [showDanmakuOverlay, setShowDanmakuOverlay] = useState(false);
   const [danmakuText, setDanmakuText] = useState('');
@@ -217,22 +196,7 @@ function PlayPageClient() {
       color: danmakuColor,
       border: true,
     });
-    // 同步到后端，供其他用户拉取
-    try {
-      fetch('/api/danmaku', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          source: currentSource,
-          id: currentId,
-          episode: (currentEpisodeIndex + 1).toString(),
-          text,
-          color: danmakuColor,
-        }),
-      });
-    } catch (_) {
-      /* ignore */
-    }
+    // 仅本地展示弹幕，不再同步到后端
     setShowDanmakuOverlay(false);
     setDanmakuText('');
   };
@@ -673,35 +637,7 @@ function PlayPageClient() {
     }
   };
 
-  class CustomHlsJsLoader extends Hls.DefaultConfig.loader {
-    constructor(config: any) {
-      super(config);
-      const load = this.load.bind(this);
-      this.load = function (context: any, config: any, callbacks: any) {
-        // 拦截manifest和level请求
-        if (
-          (context as any).type === 'manifest' ||
-          (context as any).type === 'level'
-        ) {
-          const onSuccess = callbacks.onSuccess;
-          callbacks.onSuccess = function (
-            response: any,
-            stats: any,
-            context: any
-          ) {
-            // 如果是m3u8文件，处理内容以移除广告分段
-            if (response.data && typeof response.data === 'string') {
-              // 过滤掉广告段 - 实现更精确的广告过滤逻辑
-              response.data = filterAdsFromM3U8(response.data);
-            }
-            return onSuccess(response, stats, context, null);
-          };
-        }
-        // 执行原始load方法
-        load(context, config, callbacks);
-      };
-    }
-  }
+  // 注意：CustomHlsJsLoader 需要在 Hls 已加载后定义，已移动到播放器初始化作用域内
 
   // 当集数索引变化时自动更新视频地址
   useEffect(() => {
@@ -1160,7 +1096,7 @@ function PlayPageClient() {
         year: detailRef.current?.year,
         cover: detailRef.current?.poster || '',
         index: currentEpisodeIndexRef.current + 1, // 转换为1基索引
-        total_episodes: detailRef.current?.episodes.length || 1,
+        total_episodes: detailRef.current?.episodes?.length || 1,
         play_time: Math.floor(currentTime),
         total_time: Math.floor(duration),
         save_time: Date.now(),
@@ -1274,7 +1210,7 @@ function PlayPageClient() {
           source_name: detailRef.current?.source_name || '',
           year: detailRef.current?.year,
           cover: detailRef.current?.poster || '',
-          total_episodes: detailRef.current?.episodes.length || 1,
+          total_episodes: detailRef.current?.episodes?.length || 1,
           save_time: Date.now(),
           search_title: searchTitle,
         });
@@ -1287,12 +1223,9 @@ function PlayPageClient() {
 
   useEffect(() => {
     if (
-      !Artplayer ||
-      !Hls ||
       !videoUrl ||
       loading ||
       currentEpisodeIndex === null ||
-      !DanmukuPlugin ||
       !artRef.current
     ) {
       return;
@@ -1342,11 +1275,51 @@ function PlayPageClient() {
     }
 
     try {
-      // 创建新的播放器实例
-      Artplayer.PLAYBACK_RATE = [0.5, 0.75, 1, 1.25, 1.5, 2, 3];
-      Artplayer.USE_RAF = true;
+      // 仅在客户端动态加载播放器相关库，避免 SSR 阶段报错
+      Promise.all([
+        import('artplayer'),
+        import('hls.js'),
+        import('artplayer-plugin-danmuku'),
+      ]).then(([
+        { default: Artplayer },
+        { default: Hls },
+        { default: artplayerPluginDanmuku },
+      ]) => {
+        // 创建新的播放器实例
+        Artplayer.PLAYBACK_RATE = [0.5, 0.75, 1, 1.25, 1.5, 2, 3];
+        Artplayer.USE_RAF = true;
 
-      artPlayerRef.current = new Artplayer({
+        // 在 Hls 加载后定义广告过滤的自定义 Loader
+        class CustomHlsJsLoader extends Hls.DefaultConfig.loader {
+          constructor(config: any) {
+            super(config);
+            const load = this.load.bind(this);
+            this.load = function (context: any, config: any, callbacks: any) {
+              // 拦截 manifest 和 level 请求
+              if (
+                (context as any).type === 'manifest' ||
+                (context as any).type === 'level'
+              ) {
+                const onSuccess = callbacks.onSuccess;
+                callbacks.onSuccess = function (
+                  response: any,
+                  stats: any,
+                  context: any
+                ) {
+                  // 过滤掉广告段
+                  if (response.data && typeof response.data === 'string') {
+                    response.data = filterAdsFromM3U8(response.data);
+                  }
+                  return onSuccess(response, stats, context, null);
+                };
+              }
+              // 执行原始 load 方法
+              load(context, config, callbacks);
+            };
+          }
+        }
+
+        artPlayerRef.current = new Artplayer({
         container: artRef.current,
         url: videoUrl,
         poster: videoCover,
@@ -1382,9 +1355,9 @@ function PlayPageClient() {
         },
         // 弹幕插件
         plugins: [
-          DanmukuPlugin({
+          artplayerPluginDanmuku({
             danmuku: () => Promise.resolve([
-              { text: '欢迎来到 KotelyaTV', time: 1, color: '#22c55e', border: true },
+              { text: '欢迎来到 KodakTV', time: 1, color: '#22c55e', border: true },
               { text: '弹幕测试', time: 3 },
             ]),
             speed: 5,
@@ -1592,38 +1565,7 @@ function PlayPageClient() {
       artPlayerRef.current.on('ready', () => {
         setError(null);
 
-        // 启动周期拉取弹幕（每 10s），确保跨用户可见
-        const fetchDanmaku = async () => {
-          try {
-            const resp = await fetch(
-              `/api/danmaku?source=${encodeURIComponent(currentSource || '')}&id=${encodeURIComponent(currentId || '')}&episode=${encodeURIComponent((currentEpisodeIndex + 1).toString())}`
-            );
-            const data = await resp.json();
-            const list = Array.isArray(data?.danmuku) ? data.danmuku : [];
-            for (const d of list) {
-              // 简单去重：基于文本+时间+颜色
-              const key = `${d.text}|${d.time ?? ''}|${d.color ?? ''}`;
-              // @ts-ignore
-              if (!artPlayerRef.current.__danmakuSet) {
-                // @ts-ignore
-                artPlayerRef.current.__danmakuSet = new Set<string>();
-              }
-              // @ts-ignore
-              if (!artPlayerRef.current.__danmakuSet.has(key)) {
-                (artPlayerRef.current as any)?.plugins?.artplayerPluginDanmuku?.emit(d);
-                // @ts-ignore
-                artPlayerRef.current.__danmakuSet.add(key);
-              }
-            }
-          } catch (_) {
-            /* ignore */
-          }
-        };
-        // 立即拉取一次
-        fetchDanmaku();
-        // 定时拉取
-        const timerId = setInterval(fetchDanmaku, 10000);
-        artPlayerRef.current.on('destroy', () => clearInterval(timerId));
+        // 不再从后端周期拉取弹幕，改为仅本地显示
 
         // 播放器就绪后，如果正在播放则请求 Wake Lock
         if (artPlayerRef.current && !artPlayerRef.current.paused) {
@@ -1783,11 +1725,15 @@ function PlayPageClient() {
           videoUrl
         );
       }
+    }).catch((err) => {
+      console.error('创建播放器失败:', err);
+      setError('播放器初始化失败');
+    });
     } catch (err) {
       console.error('创建播放器失败:', err);
       setError('播放器初始化失败');
     }
-  }, [Artplayer, Hls, videoUrl, loading, blockAdEnabled]);
+  }, [videoUrl, loading, blockAdEnabled]);
 
   // 当组件卸载时清理定时器、Wake Lock 和播放器资源
   useEffect(() => {
@@ -2120,7 +2066,7 @@ function PlayPageClient() {
                       shadow-[0_8px_24px_rgba(0,0,0,0.06)]
                     '
                   >
-                    KotelyaTV
+                    KodakTV
                   </div>
                 </div>
 
@@ -2187,14 +2133,6 @@ function PlayPageClient() {
                 precomputedVideoInfo={precomputedVideoInfo}
               />
             </div>
-          </div>
-        </div>
-
-        {/* 播放页欢迎横幅 */}
-        <div className='mb-4 flex justify-center md:justify-start'>
-          <div className='inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-indigo-500 via-sky-500 to-purple-500 text-white shadow-[0_12px_36px_rgba(0,0,0,0.08)] border border-white/10 backdrop-blur-xl'>
-            <span className='font-semibold'>祝你观影愉快，{username}</span>
-            <span className='opacity-90'>🎬 右侧可换源，点击 i 发送弹幕</span>
           </div>
         </div>
 
