@@ -1319,8 +1319,15 @@ function PlayPageClient() {
           }
         }
 
+        // 在创建实例前再次确认容器存在，避免类型为 null
+        const containerEl = artRef.current;
+        if (!containerEl) {
+          console.error('Artplayer container is null');
+          return;
+        }
+
         artPlayerRef.current = new Artplayer({
-        container: artRef.current,
+        container: containerEl,
         url: videoUrl,
         poster: videoCover,
         volume: 0.7,
