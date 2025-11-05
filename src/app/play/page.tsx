@@ -1362,7 +1362,7 @@ function PlayPageClient() {
         },
         // 弹幕插件
         plugins: [
-          artplayerPluginDanmuku({
+          (artplayerPluginDanmuku as any)({
             danmuku: () => Promise.resolve([
               { text: '欢迎来到 KodakTV', time: 1, color: '#22c55e', border: true },
               { text: '弹幕测试', time: 3 },
